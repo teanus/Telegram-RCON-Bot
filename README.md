@@ -7,8 +7,6 @@ Example of work:
 <table>
 <tr>
 <th><img src="https://sun1.dataix-kz-akkol.userapi.com/s/v1/if2/SPK2N5FokOHJbxsevGRaSghtr4EFkXzNyd9J-L9DMyhULyLxjCc3o8MDYcrGCW7WEpl1YyvjmqWC8Km_3qbCHWkX.jpg?size=1080x856&quality=95&type=album" /></th>
-<th><img src="https://sun1.dataix-kz-akkol.userapi.com/s/v1/if2/sdNUmdZwC8LIb3lsArD9B7u3ouKHjTN0tG6cTJhbnS_vW2B5oSD4m5DlZqFA_8AGZPX1E7I1tD8tapq7_nwuv9kM.jpg?size=1080x653&quality=95&type=album" /></th>
-<th><img src="https://sun9-86.userapi.com/s/v1/if2/X1TdqM4FYE7s9Hd7l4HNGm_VtvsDVOlUnDMB4bc73z49UXjW9F8C21Cg0Zasyh8I6Usw4OTlm0_1Zj1WK_FhU134.jpg?size=1080x715&quality=95&type=album" /></th>
 </tr>
 </table>
 
