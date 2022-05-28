@@ -17,7 +17,7 @@
 
 
 from mcrcon import MCRcon
-from Config import MC_HOST, MC_PASSWORD, MC_IP
+from Config import MC_HOST, MC_PASSWORD, MC_PORT
 from locales import lang
 
 
@@ -31,7 +31,7 @@ def replace_color_tag(text):
 
 def command_execute(command):
     try:
-        with MCRcon(MC_HOST, MC_PASSWORD, MC_IP) as mcr:
+        with MCRcon(MC_HOST, MC_PASSWORD, MC_PORT) as mcr:
             mcr.connect()
             response = mcr.command(command)
             return replace_color_tag(response)
