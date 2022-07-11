@@ -1,47 +1,52 @@
-#           Free версия бота проекта LostWeyn
-#               Telegram: t.me/lostweyn_project
-#  #
+#
 #           Контакты разработчика:
 #               VK: vk.com/dimawinchester
 #               Telegram: t.me/teanus
 #               Github: github.com/teanus
-#               24serv: talk.24serv.pro/u/teanus
-#  #
-#  #
-#      ██╗      ██████╗ ███████╗████████╗██╗    ██╗███████╗██╗   ██╗███╗   ██╗
-#      ██║     ██╔═══██╗██╔════╝╚══██╔══╝██║    ██║██╔════╝╚██╗ ██╔╝████╗  ██║
-#      ██║     ██║   ██║███████╗   ██║   ██║ █╗ ██║█████╗   ╚████╔╝ ██╔██╗ ██║
-#      ██║     ██║   ██║╚════██║   ██║   ██║███╗██║██╔══╝    ╚██╔╝  ██║╚██╗██║
-#      ███████╗╚██████╔╝███████║   ██║   ╚███╔███╔╝███████╗   ██║   ██║ ╚████║
-#      ╚══════╝ ╚═════╝ ╚══════╝   ╚═╝    ╚══╝╚══╝ ╚══════╝   ╚═╝   ╚═╝  ╚═══╝
-from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
-from locales import lang
+#
+#
+#
+# ████████╗███████╗ █████╗ ███╗   ██╗██╗   ██╗███████╗
+# ╚══██╔══╝██╔════╝██╔══██╗████╗  ██║██║   ██║██╔════╝
+#    ██║   █████╗  ███████║██╔██╗ ██║██║   ██║███████╗
+#    ██║   ██╔══╝  ██╔══██║██║╚██╗██║██║   ██║╚════██║
+#    ██║   ███████╗██║  ██║██║ ╚████║╚██████╔╝███████║
+#    ╚═╝   ╚══════╝╚═╝  ╚═╝╚═╝  ╚═══╝ ╚═════╝ ╚══════╝
 
-button_id = KeyboardButton(lang.button_message_id)
-button_rcon = KeyboardButton(lang.button_message_rcon)
-button_info = KeyboardButton(lang.button_message_info)
-button_admin_panel = KeyboardButton(lang.button_message_panel_admin_settings)
-button_support = KeyboardButton(lang.button_message_support)
+
+from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
+
+button_id = KeyboardButton('🆔айди')
+button_rcon = KeyboardButton('❗ркон')
+button_info = KeyboardButton('🆘инфо')
+button_admin_panel = KeyboardButton('⚙управление')
+button_support = KeyboardButton('🆘поддержка')
 main_menu = ReplyKeyboardMarkup(resize_keyboard=True).add(button_id, button_rcon, button_info, button_support,
                                                           button_admin_panel)
 
-button_cancel = KeyboardButton(lang.button_message_cancel)
-button_panel_add_roles = KeyboardButton(lang.button_message_panel_add)
-button_panel_commands = KeyboardButton(lang.button_message_panel_commands)
-admin_panel_menu = ReplyKeyboardMarkup(resize_keyboard=True).add(button_panel_add_roles, button_cancel,
+button_cancel = KeyboardButton('◀отмена')
+button_panel_roles = KeyboardButton('📝роли')
+button_panel_commands = KeyboardButton('📝команды')
+admin_panel_menu = ReplyKeyboardMarkup(resize_keyboard=True).add(button_panel_roles, button_cancel,
                                                                  button_panel_commands)
-button_panel_add_admin = KeyboardButton(lang.button_message_panel_add_admin)
-button_panel_add_user = KeyboardButton(lang.button_message_panel_add_user)
-button_back = KeyboardButton(lang.button_message_back)
-admin_panel_add = ReplyKeyboardMarkup(resize_keyboard=True).add(button_panel_add_user,
-                                                                button_back,
-                                                                button_panel_add_admin)
 
-button_panel_commands_add = KeyboardButton(lang.button_message_panel_commands_add)
-button_panel_commands_remove = KeyboardButton(lang.button_message_panel_commands_remove)
-button_back = KeyboardButton(lang.button_message_back)
+button_panel_add_roles = KeyboardButton('📝выдать')
+button_panel_remove_roles = KeyboardButton('📝снять')
+button_back = KeyboardButton('⏹назад')
+roles_panel = ReplyKeyboardMarkup(resize_keyboard=True).add(button_panel_add_roles, button_back,
+                                                            button_panel_remove_roles)
+
+button_panel_admin = KeyboardButton('🪪админ')
+button_panel_user = KeyboardButton('🪪обычный')
+button_back = KeyboardButton('⏹назад')
+roles_switch_panel = ReplyKeyboardMarkup(resize_keyboard=True).add(button_panel_user,
+                                                                   button_back,
+                                                                   button_panel_admin)
+
+button_panel_commands_add = KeyboardButton('⛔добавить')
+button_panel_commands_remove = KeyboardButton('🗑удалить')
+button_back = KeyboardButton('⏹назад')
 panel_commands_switch = ReplyKeyboardMarkup(resize_keyboard=True).add(button_panel_commands_add, button_back,
-                                                                             button_panel_commands_remove)
-
-button_back = KeyboardButton(lang.button_message_back)
+                                                                      button_panel_commands_remove)
+button_back = KeyboardButton('⏹назад')
 admin_back = ReplyKeyboardMarkup(resize_keyboard=True).add(button_back)

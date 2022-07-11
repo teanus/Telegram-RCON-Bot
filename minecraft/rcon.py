@@ -1,24 +1,21 @@
-#          Free версия бота проекта LostWeyn
-#              Telegram: t.me/lostweyn_project
 #
-#          Контакты разработчика:
-#              VK: vk.com/dimawinchester
-#              Telegram: t.me/teanus
-#              Github: github.com/teanus
-#              24serv: talk.24serv.pro/u/teanus
+#           Контакты разработчика:
+#               VK: vk.com/dimawinchester
+#               Telegram: t.me/teanus
+#               Github: github.com/teanus
 #
 #
-#     ██╗      ██████╗ ███████╗████████╗██╗    ██╗███████╗██╗   ██╗███╗   ██╗
-#     ██║     ██╔═══██╗██╔════╝╚══██╔══╝██║    ██║██╔════╝╚██╗ ██╔╝████╗  ██║
-#     ██║     ██║   ██║███████╗   ██║   ██║ █╗ ██║█████╗   ╚████╔╝ ██╔██╗ ██║
-#     ██║     ██║   ██║╚════██║   ██║   ██║███╗██║██╔══╝    ╚██╔╝  ██║╚██╗██║
-#     ███████╗╚██████╔╝███████║   ██║   ╚███╔███╔╝███████╗   ██║   ██║ ╚████║
-#     ╚══════╝ ╚═════╝ ╚══════╝   ╚═╝    ╚══╝╚══╝ ╚══════╝   ╚═╝   ╚═╝  ╚═══╝
+#
+# ████████╗███████╗ █████╗ ███╗   ██╗██╗   ██╗███████╗
+# ╚══██╔══╝██╔════╝██╔══██╗████╗  ██║██║   ██║██╔════╝
+#    ██║   █████╗  ███████║██╔██╗ ██║██║   ██║███████╗
+#    ██║   ██╔══╝  ██╔══██║██║╚██╗██║██║   ██║╚════██║
+#    ██║   ███████╗██║  ██║██║ ╚████║╚██████╔╝███████║
+#    ╚═╝   ╚══════╝╚═╝  ╚═╝╚═╝  ╚═══╝ ╚═════╝ ╚══════╝
 
 
 from mcrcon import MCRcon
-from Config import MC_HOST, MC_PASSWORD, MC_PORT
-from locales import lang
+from resources import config
 
 
 def replace_color_tag(text):
@@ -31,9 +28,9 @@ def replace_color_tag(text):
 
 def command_execute(command):
     try:
-        with MCRcon(MC_HOST, MC_PASSWORD, MC_PORT) as mcr:
+        with MCRcon(config.rcon()['HOST'], config.rcon()['PASSWORD'], config.rcon()['PORT']) as mcr:
             mcr.connect()
             response = mcr.command(command)
             return replace_color_tag(response)
-    except:
-        return lang.message_server_error
+    finally:
+        return 'Произошла ошибка RCON. Повторите попытку'

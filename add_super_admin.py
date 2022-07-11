@@ -1,35 +1,32 @@
-#           Free версия бота проекта LostWeyn
-#               Telegram: t.me/lostweyn_project
-#  #
+#
 #           Контакты разработчика:
 #               VK: vk.com/dimawinchester
 #               Telegram: t.me/teanus
 #               Github: github.com/teanus
-#               24serv: talk.24serv.pro/u/teanus
-#  #
-#  #
-#      ██╗      ██████╗ ███████╗████████╗██╗    ██╗███████╗██╗   ██╗███╗   ██╗
-#      ██║     ██╔═══██╗██╔════╝╚══██╔══╝██║    ██║██╔════╝╚██╗ ██╔╝████╗  ██║
-#      ██║     ██║   ██║███████╗   ██║   ██║ █╗ ██║█████╗   ╚████╔╝ ██╔██╗ ██║
-#      ██║     ██║   ██║╚════██║   ██║   ██║███╗██║██╔══╝    ╚██╔╝  ██║╚██╗██║
-#      ███████╗╚██████╔╝███████║   ██║   ╚███╔███╔╝███████╗   ██║   ██║ ╚████║
-#      ╚══════╝ ╚═════╝ ╚══════╝   ╚═╝    ╚══╝╚══╝ ╚══════╝   ╚═╝   ╚═╝  ╚═══╝
+#
+#
+#
+# ████████╗███████╗ █████╗ ███╗   ██╗██╗   ██╗███████╗
+# ╚══██╔══╝██╔════╝██╔══██╗████╗  ██║██║   ██║██╔════╝
+#    ██║   █████╗  ███████║██╔██╗ ██║██║   ██║███████╗
+#    ██║   ██╔══╝  ██╔══██║██║╚██╗██║██║   ██║╚════██║
+#    ██║   ███████╗██║  ██║██║ ╚████║╚██████╔╝███████║
+#    ╚═╝   ╚══════╝╚═╝  ╚═╝╚═╝  ╚═══╝ ╚═════╝ ╚══════╝
 
 
-import Config
-from locales import lang
+from resources import config
 from provider import sqlite_db
 
 
 def console_add_super_admin():
-    if Config.console_on_role:
-        admin_id = input(lang.message_console_add_super_admin)
+    if config.console()['give_role']:
+        admin_id = input('Введите id для выдачи прав super-админа или нажмите Enter для пропуска: ')
         if admin_id == '':
             return 'Close'
         elif sqlite_db.check_admin_user(admin_id):
-            return admin_id + lang.message_panel_admin_is_exists
+            return admin_id + ' уже есть в списке супер-админов'
         else:
             sqlite_db.admin_add(admin_id)
-            return admin_id + lang.message_sqlite_add_admin
+            return admin_id + ' был добавлен в список супер-админов'
     else:
         return
