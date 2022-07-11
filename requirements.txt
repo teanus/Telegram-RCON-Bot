@@ -1,2 +1,3 @@
-aiogram
-mcrcon
+aiogram~=2.21
+mcrcon~=0.7.0
+PyYAML~=6.0
