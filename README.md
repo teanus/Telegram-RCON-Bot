@@ -49,11 +49,12 @@ Features:
 
 
 ## Installation
-
-
 ```bash
 curl -O https://github.com/teanus/Telegram-RCON-Bot
+pip install -r requirements.txt
 ```
+<b> NOTICE! Run and install dependencies while in a virtual environment (venv) </b>
+
 
 ## Telegram token
 
