@@ -31,4 +31,4 @@ async def start(message: types.Message):
 
 
 def register_handlers_common(dp: Dispatcher):
-    dp.register_message_handler(start, commands=['start', 'старт'])
+    dp.register_message_handler(start)
