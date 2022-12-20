@@ -32,5 +32,5 @@ def command_execute(command):
             mcr.connect()
             response = mcr.command(command)
             return replace_color_tag(response)
-    finally:
+    except:
         return 'Произошла ошибка RCON. Повторите попытку'
