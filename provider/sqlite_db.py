@@ -38,7 +38,7 @@ def sql_start():
 def user_add(user_id):
     sql_start()
     query = 'INSERT INTO users(telegram_id, role) VALUES(?, ?)'
-    cur.execute(query, [user_id, 'normal'])
+    cur.execute(query, [user_id, 'normal', ])
     db.commit()
     return 'Пользователь был добавлен в список'
 
@@ -46,7 +46,7 @@ def user_add(user_id):
 def admin_add(user_id):
     sql_start()
     query = 'INSERT INTO users(telegram_id, role) VALUES(?, ?)'
-    cur.execute(query, [user_id, 'admin'])
+    cur.execute(query, [user_id, 'admin', ])
     db.commit()
     return 'Админ был добавлен в список'
 
@@ -54,7 +54,7 @@ def admin_add(user_id):
 def user_remove(user_id):
     sql_start()
     query = 'DELETE FROM users WHERE telegram_id = ?'
-    cur.execute(query, user_id)
+    cur.execute(query, (user_id,))
     db.commit()
     return 'Пользователь был успешно удален из бд'
 
@@ -62,15 +62,15 @@ def user_remove(user_id):
 def admin_remove(user_id):
     sql_start()
     query = 'DELETE FROM users WHERE telegram_id= ?'
-    cur.execute(query, user_id)
+    cur.execute(query, (user_id,))
     db.commit()
     return 'Администратор успешно удален из бд!'
 
 
 def add_black_list(cmd):
     sql_start()
-    query = 'INSERT INTO black_list(command) VALUES(?)'
-    cur.execute(query, cmd)
+    query = "INSERT INTO black_list(command) VALUES(?)"
+    cur.execute(query, (cmd,))
     db.commit()
     return 'Команда была заблокирована'
 
@@ -78,7 +78,7 @@ def add_black_list(cmd):
 def remove_black_list(cmd):
     sql_start()
     query = f"DELETE FROM black_list WHERE command = ?"
-    cur.execute(query, cmd)
+    cur.execute(query, (cmd,))
     db.commit()
     return 'Команда была разблокирована'
 
