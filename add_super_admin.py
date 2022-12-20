@@ -29,4 +29,4 @@ def console_add_super_admin():
             sqlite_db.admin_add(admin_id)
             return admin_id + ' был добавлен в список супер-админов'
     else:
-        return
+        return 'Режим выдачи роли выключен. Пропускаем'
