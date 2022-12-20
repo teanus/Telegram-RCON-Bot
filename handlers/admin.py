@@ -45,21 +45,25 @@ async def settings_panel(message: types.Message):
 
 
 async def cancel_settings(message: types.Message, state: FSMContext):
+    # выходит из админ панели
     await message.reply('Вы вышли из админ панели', reply_markup=kb_admin.main_menu)
     await state.finish()
 
 
 async def back_to_state_settings(message: types.Message, state: FSMContext):
+    # выходит из панели выбора действия над командами
     await message.reply('Возвращаемся назад!)', reply_markup=kb_admin.admin_panel_menu)
     await state.set_state(AdminState.settings)
 
 
 async def back_state_add(message: types.Message, state: FSMContext):
+    # выходит из выдачи ролей
     await message.reply('Возвращаемся назад!)', reply_markup=kb_admin.roles_switch_panel)
     await state.set_state(AdminState.give)
 
 
 async def back_state_remove(message: types.Message, state: FSMContext):
+    # выходит из удаления роли
     await message.reply('Возвращаемся назад!)', reply_markup=kb_admin.roles_switch_panel)
     await state.set_state(AdminState.remove)
 
@@ -70,18 +74,22 @@ async def back_state_commands_switch(message: types.Message, state: FSMContext):
 
 
 async def back_state_remove_roles_switcher(message: types.Message, state: FSMContext):
+    # выходит из панели роли
     await message.reply('Возвращаемся назад!)', reply_markup=kb_admin.admin_panel_menu)
     await state.set_state(AdminState.settings)
 
 
 async def back_state_roles(message: types.Message, state: FSMContext):
+    # назад к панели ролей
     await message.reply('Возвращаемся назад!)', reply_markup=kb_admin.roles_panel)
     await state.set_state(AdminState.roles_switch)
 
 
-async def back_state_remove_roles(message: types.Message, state: FSMContext):
-    await message.reply('Возвращаемся назад!)', reply_markup=kb_admin.roles_panel)
-    await state.set_state(AdminState.remove)
+async def back_state_remove_command(message: types.Message, state: FSMContext):
+    # назад к панели действия над командами
+    await message.reply('Возвращаемся назад!)', reply_markup=kb_admin.panel_commands_switch)
+    await state.set_state(AdminState.commands)
+
 
 
 async def roles_switch(message: types.message):
@@ -216,6 +224,8 @@ def register_handlers_admin(dp: Dispatcher):
                                 state=[AdminState.remove, AdminState.give])
     dp.register_message_handler(back_state_remove, Text(equals='⏹назад', ignore_case=True),
                                 state=[AdminState.remove_user, AdminState.remove_admin])
+    dp.register_message_handler(back_state_remove_command, Text(equals='⏹назад', ignore_case=True),
+                                state=[AdminState.command_add, AdminState.command_remove])
     dp.register_message_handler(roles_switch, Text(startswith='📝роли', ignore_case=True),
                                 state=AdminState.settings)
     dp.register_message_handler(give_roles, Text(equals='📝выдать', ignore_case=True), state=AdminState.roles_switch)
