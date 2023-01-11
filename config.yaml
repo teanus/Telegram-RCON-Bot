@@ -15,7 +15,6 @@
 
 
 Telegram:
-  token: ""
   on_logger_group: False  # логирование в группе телеграм (True - вкл, False - выкл)
   logger_chat_id: ''  # id группы для логирования бота (если включено)
 
