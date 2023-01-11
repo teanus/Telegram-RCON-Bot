@@ -17,9 +17,10 @@
 from aiogram import Bot
 from aiogram.dispatcher import Dispatcher
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
-from resources import config
+from dotenv import load_dotenv
+import os
 
-
+load_dotenv()
 storage = MemoryStorage()
-bot = Bot(config.telegram()['token'])
+bot = Bot(os.getenv('TOKEN'))
 dp = Dispatcher(bot, storage=storage)
