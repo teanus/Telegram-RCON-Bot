@@ -14,4 +14,5 @@
 #    ╚═╝   ╚══════╝╚═╝  ╚═╝╚═╝  ╚═══╝ ╚═════╝ ╚══════╝
 
 
-from provider import sqlite_db
+from provider.sqlite_db import DataBase
+

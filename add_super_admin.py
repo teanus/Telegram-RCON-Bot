@@ -15,7 +15,9 @@
 
 
 from resources import config
-from provider import sqlite_db
+from provider import DataBase
+
+db = DataBase()
 
 
 def console_add_super_admin():
@@ -23,10 +25,10 @@ def console_add_super_admin():
         admin_id = input('Введите id для выдачи прав super-админа или нажмите Enter для пропуска: ')
         if admin_id == '':
             return 'Close'
-        elif sqlite_db.check_admin_user(admin_id):
+        elif db.check_admin_user(admin_id):
             return admin_id + ' уже есть в списке супер-админов'
         else:
-            sqlite_db.admin_add(admin_id)
+            db.admin_add(admin_id)
             return admin_id + ' был добавлен в список супер-админов'
     else:
         return 'Режим выдачи роли выключен. Пропускаем'
