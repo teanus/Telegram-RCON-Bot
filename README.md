@@ -36,7 +36,7 @@ Admin Features:
 * Assigning roles to users
 * Blocking commands
 * Unlocking commands
-
+* Direct logging to a group
 
 Features:
 * Executing commands on the minecraft server from under Telegrams
@@ -44,7 +44,6 @@ Features:
 * Ability to block commands
 * Admin panel
 * Direct logging to a group
-* Multilingual support
 * Initial protection against the issuance of a super-admin
 
 
