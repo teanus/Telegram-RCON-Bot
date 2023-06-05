@@ -17,23 +17,21 @@
 from aiogram import types, Dispatcher
 from aiogram.dispatcher.filters.state import State, StatesGroup
 from aiogram.dispatcher.filters import Text
-from keyboards import kb_client, kb_admin, kb_other
-from minecraft.rcon import command_execute
-from provider import DataBase
+from keyboards import kb_client, kb_admin
+from minecraft import rcon
+from provider import db
 from logger.group_logger import groups_logger
 from aiogram.dispatcher import FSMContext
+from resources import config
 
 
 class FsmOther(StatesGroup):
     rcon = State()
 
 
-db = DataBase()
-
-
 async def rcon_cmd(message: types.Message):
     chat_id = message.chat.id
-    if db.check_admin_user(chat_id) and db.user_exists(chat_id):
+    if await db.check_admin_user(chat_id) and await db.user_exists(chat_id):
         await message.reply('Теперь пришли команду', reply_markup=kb_client.rcon_cancel)
         await FsmOther.rcon.set()
     else:
@@ -42,7 +40,7 @@ async def rcon_cmd(message: types.Message):
 
 async def cancel_state_rcon(message: types.Message, state: FSMContext):
     chat_id = message.chat.id
-    if db.check_admin_user(chat_id):
+    if await db.check_admin_user(chat_id):
         await message.reply('Ты вышел из консоли. Прикажи что исполнять!', reply_markup=kb_admin.main_menu)
         await state.finish()
     else:
@@ -54,12 +52,12 @@ async def get_command(message: types.Message, state: FSMContext):
     low = message.text.lower()
     command = low.split(' ', 1)
     user_id = message.from_user.id
-    if db.command_exists(command[0]):
+    if await db.command_exists(command[0]):
         await groups_logger('RCON: ', user_id, message.text)
         await message.reply('Команда заблокирована! Используйте другую:)')
     else:
         await groups_logger('RCON: ', user_id, message.text)
-        await message.reply(f'Команда выполнена. Ответ сервера:\n{command_execute(low)}')
+        await message.reply(f'Команда выполнена. Ответ сервера:\n{await async_rcon.command_execute(low)}')
         await message.answer('Вы можете продолжить выполнять команды. Просто пришлите мне их. Или введите отмена')
         await state.set_state(FsmOther.rcon)
 

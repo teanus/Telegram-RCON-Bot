@@ -19,7 +19,7 @@ from aiogram.dispatcher.filters import Text
 from aiogram.dispatcher.filters.state import State, StatesGroup
 from aiogram.dispatcher import FSMContext
 from keyboards import kb_admin
-from provider import DataBase
+from provider import db
 from logger.group_logger import groups_logger
 
 
@@ -37,12 +37,9 @@ class AdminState(StatesGroup):
     add_admin = State()
 
 
-db = DataBase()
-
-
 async def settings_panel(message: types.Message):
     chat_id = message.from_user.id
-    if db.check_admin_user(chat_id):
+    if await db.check_admin_user(chat_id):
         await message.reply('Вы вошли в админ панель! Выберите действие', reply_markup=kb_admin.admin_panel_menu)
         await AdminState.settings.set()
 
@@ -131,46 +128,46 @@ async def roles_add_admin(message: types.Message):
 
 async def get_add_user_id(message: types.Message, state: FSMContext):
     user_id = message.from_user.id
-    if db.user_exists(message.text):
+    if await db.user_exists(message.text):
         await message.reply(f'Пользователь с таким  id уже есть в списке.\nВведите другой id или нажмите "назад"')
         await state.set_state(AdminState.add_user)
     else:
         await groups_logger('Выдача роли обычного игрока: ', user_id, message.text)
-        await message.reply(db.user_add(message.text))
+        await message.reply(await db.add_user(message.text))
 
 
 async def get_add_admin_id(message: types.Message, state: FSMContext):
     user_id = message.from_user.id
-    if db.check_admin_user(message.text):
+    if await db.check_admin_user(message.text):
         await message.reply(f'Этот id уже имеет роль администратора.\nВведите другой id или нажмите "назад"')
         await state.set_state(AdminState.add_admin)
     else:
         await groups_logger('Выдача роли администратора: ', user_id, message.text)
-        await message.reply(db.user_add(message.text))
+        await message.reply(await db.add_user(message.text))
 
 
 async def get_remove_user_id(message: types.Message, state: FSMContext):
     user_id = message.from_user.id
-    if not db.user_exists(message.text):
+    if not await db.user_exists(message.text):
         await message.reply(f'Пользователь с таким  id нет в списке.\nВведите другой id или нажмите "назад"')
         await state.set_state(AdminState.remove_user)
     else:
         await groups_logger('Снятие роли пользователя: ', user_id, message.text)
-        await message.reply(db.user_remove(message.text))
+        await message.reply(await db.user_remove(message.text))
 
 
 async def get_remove_admin_id(message: types.Message, state: FSMContext):
     user_id = message.from_user.id
-    if not db.check_admin_user(message.text):
+    if not await db.check_admin_user(message.text):
         await message.reply(f'В бд нет администратора с таким id.\nВведите другой id или нажмите "назад"')
         await state.set_state(AdminState.remove_admin)
     else:
         await groups_logger('Снятие роли администратора: ', user_id, message.text)
-        await message.reply(db.admin_remove(message.text))
+        await message.reply(await db.admin_remove(message.text))
 
 
 async def commands_settings(message: types.Message, state: FSMContext):
-    await message.reply(f'Список заблокированных команд на данный момент:\n {db.commands_all()}')
+    await message.reply(f'Список заблокированных команд на данный момент:\n {await db.commands_all()}')
     await message.reply('Выберите, что нужно сделать. Добавить или удалить команды из списка. Либо вернитесь назад',
                         reply_markup=kb_admin.panel_commands_switch)
     await state.set_state(AdminState.commands)
@@ -189,12 +186,12 @@ async def button_commands_remove(message: types.Message, state: FSMContext):
 async def command_add(message: types.Message, state: FSMContext):
     user_id = message.from_user.id
     low = message.text.lower()
-    if db.command_exists(low):
+    if await db.command_exists(low):
         await message.reply("Эта команда была заблокирована ранее. Введите другую или вернитесь назад")
         await groups_logger('Попытался заблокировать команду: ', user_id, message.text)
         await state.set_state(AdminState.command_add)
     else:
-        db.add_black_list(low)
+        await db.add_black_list(low)
         await groups_logger('Добавил команду в черный список', user_id, message.text)
         await message.reply('Команда была заблокирована.\nПришлите еще одну команду, или вернитесь назад')
         await state.set_state(AdminState.command_add)
@@ -203,8 +200,8 @@ async def command_add(message: types.Message, state: FSMContext):
 async def command_remove(message: types.Message, state: FSMContext):
     user_id = message.from_user.id
     low = message.text.lower()
-    if db.command_exists(low):
-        db.remove_black_list(low)
+    if await db.command_exists(low):
+        await db.remove_black_list(low)
         await groups_logger('Удаление команды: ', user_id, message.text)
         await message.reply('Команда разблокирована!\nПришлите еще команду для разблокировки, или вернитесь назад')
         await state.set_state(AdminState.command_remove)
