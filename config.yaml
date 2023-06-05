@@ -18,13 +18,17 @@ Telegram:
   on_logger_group: False  # логирование в группе телеграм (True - вкл, False - выкл)
   logger_chat_id: ''  # id группы для логирования бота (если включено)
 
-database:
-  name: 'rcon_bot.db'
 
-rcon:
-  HOST: "127.0.0.1"
-  PASSWORD: "pass"
-  PORT: 25576
+database:
+  type: 'sqlite' # Выбери провайдера (postgresql или sqlite)
+
+  postgresql:
+    name: 'teanus_rcon_bot'
+
+  sqlite:
+    name: 'sqlite_db.db'
 
 console:
-  give_role: False
+  give_role: True # Включите, если хотите выдать админ роль (лучше перед этим получить свой id)
+
+
