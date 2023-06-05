@@ -22,7 +22,7 @@ from add_super_admin import console_add_super_admin
 
 async def on_startup(_):
     print('Бот начал работу!')
-    print(console_add_super_admin())
+    print(await console_add_super_admin())
 
 
 async def on_shutdown(_):
