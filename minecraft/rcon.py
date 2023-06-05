@@ -15,7 +15,8 @@
 
 
 from mcrcon import MCRcon
-from resources import config
+from dotenv import load_dotenv
+from os import getenv
 
 
 def replace_color_tag(text):
@@ -28,9 +29,9 @@ def replace_color_tag(text):
 
 def command_execute(command):
     try:
-        with MCRcon(config.rcon()['HOST'], config.rcon()['PASSWORD'], config.rcon()['PORT']) as mcr:
+        with MCRcon(getenv('rcon_host'), getenv('rcon_password'), getenv('rcon_port')) as mcr:
             mcr.connect()
             response = mcr.command(command)
             return replace_color_tag(response)
-    except:
-        return 'Произошла ошибка RCON. Повторите попытку'
+    except Exception as e:
+        return f'Произошла ошибка RCON. Повторите попытку: {e}'
