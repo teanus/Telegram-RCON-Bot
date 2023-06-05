@@ -1,4 +1,6 @@
-aiogram~=2.21
-mcrcon~=0.7.0
-PyYAML~=6.0
-python-dotenv~=0.17.1
+aiogram
+mcrcon
+PyYAML
+python-dotenv
+aiosqlite
+asyncpg
