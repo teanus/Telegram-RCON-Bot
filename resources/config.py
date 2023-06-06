@@ -33,5 +33,14 @@ def database():
     return read_yaml()['database']
 
 
+def rcon():
+    return read_yaml()['rcon']
+
+
 def console():
     return read_yaml()['console']
+
+
+def black_list():
+    return read_yaml()['black_list']
+
