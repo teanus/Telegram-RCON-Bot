@@ -282,4 +282,3 @@ class DataBase:
 
 
 db = DataBase(db_type=config.database()["type"])
-

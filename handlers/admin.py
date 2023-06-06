@@ -83,7 +83,9 @@ async def back_state_commands_switch(message: types.Message, state: FSMContext) 
     await state.set_state(AdminState.commands)
 
 
-async def back_state_remove_roles_switcher(message: types.Message, state: FSMContext) -> None:
+async def back_state_remove_roles_switcher(
+    message: types.Message, state: FSMContext
+) -> None:
     # выходит из панели роли
     await message.reply("Возвращаемся назад!", reply_markup=kb_admin.admin_panel_menu)
     await state.set_state(AdminState.settings)
