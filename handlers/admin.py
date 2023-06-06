@@ -38,7 +38,7 @@ class AdminState(StatesGroup):
     add_admin = State()
 
 
-async def settings_panel(message: types.Message):
+async def settings_panel(message: types.Message) -> None:
     chat_id = message.from_user.id
     if await db.check_admin_user(chat_id):
         await message.reply(
@@ -48,19 +48,19 @@ async def settings_panel(message: types.Message):
         await AdminState.settings.set()
 
 
-async def cancel_settings(message: types.Message, state: FSMContext):
+async def cancel_settings(message: types.Message, state: FSMContext) -> None:
     # выходит из админ панели
     await message.reply("Вы вышли из админ панели", reply_markup=kb_admin.main_menu)
     await state.finish()
 
 
-async def back_to_state_settings(message: types.Message, state: FSMContext):
+async def back_to_state_settings(message: types.Message, state: FSMContext) -> None:
     # выходит из панели выбора действия над командами
     await message.reply("Возвращаемся назад!)", reply_markup=kb_admin.admin_panel_menu)
     await state.set_state(AdminState.settings)
 
 
-async def back_state_add(message: types.Message, state: FSMContext):
+async def back_state_add(message: types.Message, state: FSMContext) -> None:
     # выходит из выдачи ролей
     await message.reply(
         "Возвращаемся назад!)", reply_markup=kb_admin.roles_switch_panel
@@ -68,7 +68,7 @@ async def back_state_add(message: types.Message, state: FSMContext):
     await state.set_state(AdminState.give)
 
 
-async def back_state_remove(message: types.Message, state: FSMContext):
+async def back_state_remove(message: types.Message, state: FSMContext) -> None:
     # выходит из удаления роли
     await message.reply(
         "Возвращаемся назад!)", reply_markup=kb_admin.roles_switch_panel
@@ -76,26 +76,26 @@ async def back_state_remove(message: types.Message, state: FSMContext):
     await state.set_state(AdminState.remove)
 
 
-async def back_state_commands_switch(message: types.Message, state: FSMContext):
+async def back_state_commands_switch(message: types.Message, state: FSMContext) -> None:
     await message.reply(
         "Возвращаемся назад!", reply_markup=kb_admin.panel_commands_switch
     )
     await state.set_state(AdminState.commands)
 
 
-async def back_state_remove_roles_switcher(message: types.Message, state: FSMContext):
+async def back_state_remove_roles_switcher(message: types.Message, state: FSMContext) -> None:
     # выходит из панели роли
     await message.reply("Возвращаемся назад!", reply_markup=kb_admin.admin_panel_menu)
     await state.set_state(AdminState.settings)
 
 
-async def back_state_roles(message: types.Message, state: FSMContext):
+async def back_state_roles(message: types.Message, state: FSMContext) -> None:
     # назад к панели ролей
     await message.reply("Возвращаемся назад!", reply_markup=kb_admin.roles_panel)
     await state.set_state(AdminState.roles_switch)
 
 
-async def back_state_remove_command(message: types.Message, state: FSMContext):
+async def back_state_remove_command(message: types.Message, state: FSMContext) -> None:
     # назад к панели действия над командами
     await message.reply(
         "Возвращаемся назад!)", reply_markup=kb_admin.panel_commands_switch
@@ -103,52 +103,52 @@ async def back_state_remove_command(message: types.Message, state: FSMContext):
     await state.set_state(AdminState.commands)
 
 
-async def roles_switch(message: types.message):
+async def roles_switch(message: types.message) -> None:
     await message.reply(
         "Выберите действие или вернитесь назад. ", reply_markup=kb_admin.roles_panel
     )
     await AdminState.roles_switch.set()
 
 
-async def give_roles(message: types.message):
+async def give_roles(message: types.message) -> None:
     await message.reply(
         "Выберите какую роль нужно выдать", reply_markup=kb_admin.roles_switch_panel
     )
     await AdminState.give.set()
 
 
-async def remove_role(message: types.message):
+async def remove_role(message: types.message) -> None:
     await message.reply(
         "Выберите какую роль нужно снять", reply_markup=kb_admin.roles_switch_panel
     )
     await AdminState.remove.set()
 
 
-async def remove_role_user(message: types.message):
+async def remove_role_user(message: types.message) -> None:
     await message.reply("Введите id для снятия прав", reply_markup=kb_admin.admin_back)
     await AdminState.remove_user.set()
 
 
-async def remove_role_admin(message: types.message):
+async def remove_role_admin(message: types.message) -> None:
     await message.reply("Введите id для снятия роли", reply_markup=kb_admin.admin_back)
     await AdminState.remove_admin.set()
 
 
-async def roles_add_user(message: types.Message):
+async def roles_add_user(message: types.Message) -> None:
     await message.reply(
         "Введите id для выдачи прав пользователя: ", reply_markup=kb_admin.admin_back
     )
     await AdminState.add_user.set()
 
 
-async def roles_add_admin(message: types.Message):
+async def roles_add_admin(message: types.Message) -> None:
     await message.reply(
         "Введите id для выдачи прав super-админа: ", reply_markup=kb_admin.admin_back
     )
     await AdminState.add_admin.set()
 
 
-async def get_add_user_id(message: types.Message, state: FSMContext):
+async def get_add_user_id(message: types.Message, state: FSMContext) -> None:
     user_id = message.from_user.id
     if await db.user_exists(message.text):
         await message.reply(
@@ -160,7 +160,7 @@ async def get_add_user_id(message: types.Message, state: FSMContext):
         await message.reply(await db.add_user(message.text))
 
 
-async def get_add_admin_id(message: types.Message, state: FSMContext):
+async def get_add_admin_id(message: types.Message, state: FSMContext) -> None:
     user_id = message.from_user.id
     if await db.check_admin_user(message.text):
         await message.reply(
@@ -172,7 +172,7 @@ async def get_add_admin_id(message: types.Message, state: FSMContext):
         await message.reply(await db.add_user(message.text))
 
 
-async def get_remove_user_id(message: types.Message, state: FSMContext):
+async def get_remove_user_id(message: types.Message, state: FSMContext) -> None:
     user_id = message.from_user.id
     if not await db.user_exists(message.text):
         await message.reply(
@@ -184,7 +184,7 @@ async def get_remove_user_id(message: types.Message, state: FSMContext):
         await message.reply(await db.user_remove(message.text))
 
 
-async def get_remove_admin_id(message: types.Message, state: FSMContext):
+async def get_remove_admin_id(message: types.Message, state: FSMContext) -> None:
     user_id = message.from_user.id
     if not await db.check_admin_user(message.text):
         await message.reply(
@@ -196,7 +196,7 @@ async def get_remove_admin_id(message: types.Message, state: FSMContext):
         await message.reply(await db.admin_remove(message.text))
 
 
-async def commands_settings(message: types.Message, state: FSMContext):
+async def commands_settings(message: types.Message, state: FSMContext) -> None:
     await message.reply(
         f"Список заблокированных команд на данный момент:\n {await db.commands_all()}"
     )
@@ -207,21 +207,21 @@ async def commands_settings(message: types.Message, state: FSMContext):
     await state.set_state(AdminState.commands)
 
 
-async def button_commands_add(message: types.Message, state: FSMContext):
+async def button_commands_add(message: types.Message, state: FSMContext) -> None:
     await message.reply(
         "Пришлите команду или вернитесь назад", reply_markup=kb_admin.admin_back
     )
     await state.set_state(AdminState.command_add)
 
 
-async def button_commands_remove(message: types.Message, state: FSMContext):
+async def button_commands_remove(message: types.Message, state: FSMContext) -> None:
     await message.reply(
         "Пришлите команду или вернитесь назад", reply_markup=kb_admin.admin_back
     )
     await state.set_state(AdminState.command_remove)
 
 
-async def command_add(message: types.Message, state: FSMContext):
+async def command_add(message: types.Message, state: FSMContext) -> None:
     user_id = message.from_user.id
     low = message.text.lower()
     if await db.command_exists(low):
@@ -239,7 +239,7 @@ async def command_add(message: types.Message, state: FSMContext):
         await state.set_state(AdminState.command_add)
 
 
-async def command_remove(message: types.Message, state: FSMContext):
+async def command_remove(message: types.Message, state: FSMContext) -> None:
     user_id = message.from_user.id
     low = message.text.lower()
     if await db.command_exists(low):
@@ -259,7 +259,7 @@ async def command_remove(message: types.Message, state: FSMContext):
         await state.set_state(AdminState.command_remove)
 
 
-def register_handlers_admin(dp: Dispatcher):
+def register_handlers_admin(dp: Dispatcher) -> None:
     dp.register_message_handler(
         settings_panel, Text(startswith="⚙управление", ignore_case=True)
     )

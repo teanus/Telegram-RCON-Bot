@@ -15,32 +15,33 @@
 
 
 from pathlib import Path
+from typing import Any, Dict
 
 import yaml
 
-path = Path(__file__).resolve().parents[1] / "config.yaml"
+path: Path = Path(__file__).resolve().parents[1] / "config.yaml"
 
 
-def read_yaml():
+def read_yaml() -> Dict[str, Any]:
     with open(path, "r") as file:
         return yaml.safe_load(file)
 
 
-def telegram():
+def telegram() -> Dict[str, Any]:
     return read_yaml()["Telegram"]
 
 
-def database():
+def database() -> Dict[str, Any]:
     return read_yaml()["database"]
 
 
-def sqlite():
-    return read_yaml()['sqlite']
+def sqlite() -> Dict[str, Any]:
+    return read_yaml()["sqlite"]
 
 
-def postgresql():
-    return read_yaml()['postgresql']
+def postgresql() -> Dict[str, Any]:
+    return read_yaml()["postgresql"]
 
 
-def console():
+def console() -> Dict[str, Any]:
     return read_yaml()["console"]

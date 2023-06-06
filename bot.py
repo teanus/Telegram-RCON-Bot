@@ -21,12 +21,12 @@ from create_bot import dp
 from handlers import admin, client, common, other
 
 
-async def on_startup(_):
+async def on_startup(_) -> None:
     print("Бот начал работу!")
     print(await console_add_super_admin())
 
 
-async def on_shutdown(_):
+async def on_shutdown(_) -> None:
     print("Бот выключен")
 
 
