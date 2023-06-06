@@ -19,6 +19,8 @@ from os import getenv
 from dotenv import load_dotenv
 from mcrcon import MCRcon
 
+load_dotenv()
+
 
 def replace_color_tag(text):
     color_tags = [
@@ -57,5 +59,5 @@ def command_execute(command):
             mcr.connect()
             response = mcr.command(command)
             return replace_color_tag(response)
-    except Exception as e:
-        return f"Произошла ошибка RCON. Повторите попытку: {e}"
+    except:
+        return f"Произошла ошибка RCON. Повторите попытку:"

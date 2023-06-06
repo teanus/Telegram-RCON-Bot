@@ -64,7 +64,7 @@ async def get_command(message: types.Message, state: FSMContext):
     else:
         await groups_logger("RCON: ", user_id, message.text)
         await message.reply(
-            f"Команда выполнена. Ответ сервера:\n{await rcon.command_execute(low)}"
+            f"Команда выполнена. Ответ сервера:\n{rcon.command_execute(low)}"
         )
         await message.answer(
             "Вы можете продолжить выполнять команды. Просто пришлите мне их. Или введите отмена"

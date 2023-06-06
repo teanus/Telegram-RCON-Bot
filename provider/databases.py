@@ -32,7 +32,7 @@ class SqliteDatabase:
 
     async def connect(self):
         try:
-            self.con = await aiosqlite.connect(config.database()["sqlite"]["name"])
+            self.con = await aiosqlite.connect(config.sqlite()["name"])
             self.cur = await self.con.cursor()
             if self.con:
                 print("SQLite: подключился")
@@ -138,7 +138,7 @@ class PostgresqlDatabase:
             self.con = await asyncpg.connect(
                 user=getenv("postgre_username"),
                 password=getenv("postgre_password"),
-                database=config.database()["postgresql"]["name"],
+                database=config.postgresql()["name"],
                 host=getenv("postgre_host"),
                 port=getenv("postgre_port"),
             )

@@ -34,5 +34,13 @@ def database():
     return read_yaml()["database"]
 
 
+def sqlite():
+    return read_yaml()['sqlite']
+
+
+def postgresql():
+    return read_yaml()['postgresql']
+
+
 def console():
     return read_yaml()["console"]

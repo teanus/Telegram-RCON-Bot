@@ -12,8 +12,6 @@
 #    ██║   ██╔══╝  ██╔══██║██║╚██╗██║██║   ██║╚════██║
 #    ██║   ███████╗██║  ██║██║ ╚████║╚██████╔╝███████║
 #    ╚═╝   ╚══════╝╚═╝  ╚═╝╚═╝  ╚═══╝ ╚═════╝ ╚══════╝
-
-
 Telegram:
   on_logger_group: False  # логирование в группе телеграм (True - вкл, False - выкл)
   logger_chat_id: ''  # id группы для логирования бота (если включено)
@@ -22,13 +20,11 @@ Telegram:
 database:
   type: 'sqlite' # Выбери провайдера (postgresql или sqlite)
 
-  postgresql:
+postgresql:
     name: 'teanus_rcon_bot'
 
-  sqlite:
+sqlite:
     name: 'sqlite_db.db'
 
 console:
   give_role: True # Включите, если хотите выдать админ роль (лучше перед этим получить свой id)
-
-
