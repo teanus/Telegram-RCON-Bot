@@ -35,11 +35,11 @@ def database():
 
 
 def sqlite():
-    return read_yaml()['sqlite']
+    return read_yaml()["sqlite"]
 
 
 def postgresql():
-    return read_yaml()['postgresql']
+    return read_yaml()["postgresql"]
 
 
 def console():
