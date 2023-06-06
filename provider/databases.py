@@ -14,11 +14,13 @@
 #    ╚═╝   ╚══════╝╚═╝  ╚═╝╚═╝  ╚═══╝ ╚═════╝ ╚══════╝
 
 
+from os import getenv
+
 import aiosqlite
 import asyncpg
-from resources import config
 from dotenv import load_dotenv
-from os import getenv
+
+from resources import config
 
 load_dotenv()
 

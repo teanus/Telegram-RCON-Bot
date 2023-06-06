@@ -14,7 +14,7 @@
 #    ╚═╝   ╚══════╝╚═╝  ╚═╝╚═╝  ╚═══╝ ╚═════╝ ╚══════╝
 
 
-from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
+from aiogram.types import KeyboardButton, ReplyKeyboardMarkup
 
 button_id = KeyboardButton("🆔айди")
 button_info = KeyboardButton("🆘инфо")

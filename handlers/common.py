@@ -14,10 +14,10 @@
 #    ╚═╝   ╚══════╝╚═╝  ╚═╝╚═╝  ╚═══╝ ╚═════╝ ╚══════╝
 
 
-from aiogram import types, Dispatcher
-from keyboards import kb_client, kb_admin, kb_other
+from aiogram import Dispatcher, types
+
+from keyboards import kb_admin, kb_client, kb_other
 from provider import db
-from resources import config
 
 
 async def start(message: types.Message):

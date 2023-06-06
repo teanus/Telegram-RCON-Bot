@@ -14,8 +14,8 @@
 #    ╚═╝   ╚══════╝╚═╝  ╚═╝╚═╝  ╚═══╝ ╚═════╝ ╚══════╝
 
 
-from resources import config
 from provider import db
+from resources import config
 
 
 async def console_add_super_admin():

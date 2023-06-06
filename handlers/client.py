@@ -14,15 +14,15 @@
 #    ╚═╝   ╚══════╝╚═╝  ╚═╝╚═╝  ╚═══╝ ╚═════╝ ╚══════╝
 
 
-from aiogram import types, Dispatcher
-from aiogram.dispatcher.filters.state import State, StatesGroup
+from aiogram import Dispatcher, types
+from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters import Text
-from keyboards import kb_client, kb_admin
+from aiogram.dispatcher.filters.state import State, StatesGroup
+
+from keyboards import kb_admin, kb_client
+from logger.group_logger import groups_logger
 from minecraft import rcon
 from provider import db
-from logger.group_logger import groups_logger
-from aiogram.dispatcher import FSMContext
-from resources import config
 
 
 class FsmOther(StatesGroup):

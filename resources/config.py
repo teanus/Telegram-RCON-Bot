@@ -14,8 +14,9 @@
 #    ╚═╝   ╚══════╝╚═╝  ╚═╝╚═╝  ╚═══╝ ╚═════╝ ╚══════╝
 
 
-import yaml
 from pathlib import Path
+
+import yaml
 
 path = Path(__file__).resolve().parents[1] / "config.yaml"
 

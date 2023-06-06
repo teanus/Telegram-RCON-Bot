@@ -14,9 +14,9 @@
 #    ╚═╝   ╚══════╝╚═╝  ╚═╝╚═╝  ╚═══╝ ╚═════╝ ╚══════╝
 
 
-from resources import config
 from create_bot import bot
 from provider import db
+from resources import config
 
 
 async def groups_logger(prefix, user_id, message):

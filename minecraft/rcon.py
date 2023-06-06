@@ -14,9 +14,10 @@
 #    ╚═╝   ╚══════╝╚═╝  ╚═╝╚═╝  ╚═══╝ ╚═════╝ ╚══════╝
 
 
-from mcrcon import MCRcon
-from dotenv import load_dotenv
 from os import getenv
+
+from dotenv import load_dotenv
+from mcrcon import MCRcon
 
 
 def replace_color_tag(text):
