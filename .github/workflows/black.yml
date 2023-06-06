@@ -1,0 +1,33 @@
+name: Black
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  format:
+    name: Format code with Black
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+
+      - name: Install Black
+        run: pip install black
+
+      - name: Run Black
+        run: black .
+
+      - name: Commit changes
+        run: |
+          git config --local user.email "teanus.ti@gmail.com"
+          git config --local user.name "teanus"
+          git commit -am "Автоматическое форматирование кода с помощью Black" --allow-empty
+          git push
