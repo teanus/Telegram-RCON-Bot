@@ -15,4 +15,3 @@
 
 
 from provider.databases import db
-

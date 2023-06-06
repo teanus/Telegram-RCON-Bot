@@ -30,14 +30,16 @@ class SqliteDatabase:
 
     async def connect(self):
         try:
-            self.con = await aiosqlite.connect(config.database()['sqlite']['name'])
+            self.con = await aiosqlite.connect(config.database()["sqlite"]["name"])
             self.cur = await self.con.cursor()
             if self.con:
-                print('SQLite: подключился')
-            table_users = 'CREATE TABLE IF NOT EXISTS users(id INTEGER PRIMARY KEY, telegram_id TEXT, role TEXT ' \
-                          'DEFAULT ' \
-                          '\'normal\') '
-            table_black_list = 'CREATE TABLE IF NOT EXISTS black_list(command TEXT)'
+                print("SQLite: подключился")
+            table_users = (
+                "CREATE TABLE IF NOT EXISTS users(id INTEGER PRIMARY KEY, telegram_id TEXT, role TEXT "
+                "DEFAULT "
+                "'normal') "
+            )
+            table_black_list = "CREATE TABLE IF NOT EXISTS black_list(command TEXT)"
             await self.execute_query(table_users)
             await self.execute_query(table_black_list)
             await self.con.commit()
@@ -80,48 +82,48 @@ class SqliteDatabase:
             return []
 
     async def add_user(self, user_id):
-        query = 'INSERT INTO users(telegram_id, role) VALUES(?, ?)'
-        return await self.execute_query(query, [user_id, 'normal'])
+        query = "INSERT INTO users(telegram_id, role) VALUES(?, ?)"
+        return await self.execute_query(query, [user_id, "normal"])
 
     async def user_exists(self, user_id):
-        query = 'SELECT * FROM users WHERE telegram_id = ?'
+        query = "SELECT * FROM users WHERE telegram_id = ?"
         result = await self.fetch_all(query, (user_id,))
         return bool(len(result))
 
     async def user_remove(self, user_id):
-        query = 'DELETE FROM users WHERE telegram_id = ?'
+        query = "DELETE FROM users WHERE telegram_id = ?"
         return await self.execute_query(query, (user_id,))
 
     async def admin_add(self, user_id):
-        query = 'INSERT INTO users(telegram_id, role) VALUES(?, ?)'
-        return await self.execute_query(query, [user_id, 'admin'])
+        query = "INSERT INTO users(telegram_id, role) VALUES(?, ?)"
+        return await self.execute_query(query, [user_id, "admin"])
 
     async def check_admin_user(self, user_id):
-        query = 'SELECT role FROM users WHERE telegram_id = ? AND role = ?'
-        result = await self.fetch_all(query, (user_id, 'admin'))
+        query = "SELECT role FROM users WHERE telegram_id = ? AND role = ?"
+        result = await self.fetch_all(query, (user_id, "admin"))
         return bool(len(result))
 
     async def admin_remove(self, user_id):
-        query = 'DELETE FROM users WHERE telegram_id = ?'
+        query = "DELETE FROM users WHERE telegram_id = ?"
         return await self.execute_query(query, (user_id,))
 
     async def add_black_list(self, cmd):
-        query = 'INSERT INTO black_list(command) VALUES(?)'
+        query = "INSERT INTO black_list(command) VALUES(?)"
         return await self.execute_query(query, (cmd,))
 
     async def command_exists(self, cmd):
-        query = 'SELECT * FROM black_list WHERE command = ?'
+        query = "SELECT * FROM black_list WHERE command = ?"
         result = await self.fetch_all(query, (cmd,))
         return bool(len(result))
 
     async def remove_black_list(self, cmd):
-        query = 'DELETE FROM black_list WHERE command = ?'
+        query = "DELETE FROM black_list WHERE command = ?"
         return await self.execute_query(query, (cmd,))
 
     async def commands_all(self):
-        query = 'SELECT command FROM black_list'
+        query = "SELECT command FROM black_list"
         result = await self.fetch_all(query)
-        return '\n'.join([row[0] for row in result])
+        return "\n".join([row[0] for row in result])
 
 
 class PostgresqlDatabase:
@@ -132,18 +134,20 @@ class PostgresqlDatabase:
     async def connect(self):
         try:
             self.con = await asyncpg.connect(
-                user=getenv('postgre_username'),
-                password=getenv('postgre_password'),
-                database=config.database()['postgresql']['name'],
-                host=getenv('postgre_host'),
-                port=getenv('postgre_port')
+                user=getenv("postgre_username"),
+                password=getenv("postgre_password"),
+                database=config.database()["postgresql"]["name"],
+                host=getenv("postgre_host"),
+                port=getenv("postgre_port"),
             )
             self.cur = await self.con.cursor()
             if self.con:
-                print('PostgreSQL: подключился')
-            table_users = 'CREATE TABLE IF NOT EXISTS users(id SERIAL PRIMARY KEY, telegram_id TEXT, role TEXT ' \
-                          'DEFAULT normal '
-            table_black_list = 'CREATE TABLE IF NOT EXISTS black_list(command TEXT)'
+                print("PostgreSQL: подключился")
+            table_users = (
+                "CREATE TABLE IF NOT EXISTS users(id SERIAL PRIMARY KEY, telegram_id TEXT, role TEXT "
+                "DEFAULT normal "
+            )
+            table_black_list = "CREATE TABLE IF NOT EXISTS black_list(command TEXT)"
             await self.execute_query(table_users)
             await self.execute_query(table_black_list)
             await self.con.commit()
@@ -182,59 +186,61 @@ class PostgresqlDatabase:
             return []
 
     async def add_user(self, user_id):
-        query = 'INSERT INTO users(telegram_id, role) VALUES($1, $2)'
-        return await self.execute_query(query, [user_id, 'normal'])
+        query = "INSERT INTO users(telegram_id, role) VALUES($1, $2)"
+        return await self.execute_query(query, [user_id, "normal"])
 
     async def user_exists(self, user_id):
-        query = 'SELECT * FROM users WHERE telegram_id = $1'
+        query = "SELECT * FROM users WHERE telegram_id = $1"
         result = await self.fetch_all(query, (user_id,))
         return bool(len(result))
 
     async def user_remove(self, user_id):
-        query = 'DELETE FROM users WHERE telegram_id = $1'
+        query = "DELETE FROM users WHERE telegram_id = $1"
         return await self.execute_query(query, (user_id,))
 
     async def admin_add(self, user_id):
-        query = 'INSERT INTO users(telegram_id, role) VALUES($1, $2)'
-        return await self.execute_query(query, [user_id, 'admin'])
+        query = "INSERT INTO users(telegram_id, role) VALUES($1, $2)"
+        return await self.execute_query(query, [user_id, "admin"])
 
     async def check_admin_user(self, user_id):
-        query = 'SELECT role FROM users WHERE telegram_id = $1 AND role = $2'
-        result = await self.fetch_all(query, (user_id, 'admin'))
+        query = "SELECT role FROM users WHERE telegram_id = $1 AND role = $2"
+        result = await self.fetch_all(query, (user_id, "admin"))
         return bool(len(result))
 
     async def admin_remove(self, user_id):
-        query = 'DELETE FROM users WHERE telegram_id = $1'
+        query = "DELETE FROM users WHERE telegram_id = $1"
         return await self.execute_query(query, (user_id,))
 
     async def add_black_list(self, cmd):
-        query = 'INSERT INTO black_list(command) VALUES($1)'
+        query = "INSERT INTO black_list(command) VALUES($1)"
         return await self.execute_query(query, (cmd,))
 
     async def command_exists(self, cmd):
-        query = 'SELECT * FROM black_list WHERE command = $1'
+        query = "SELECT * FROM black_list WHERE command = $1"
         result = await self.fetch_all(query, (cmd,))
         return bool(len(result))
 
     async def remove_black_list(self, cmd):
-        query = 'DELETE FROM black_list WHERE command = $1'
+        query = "DELETE FROM black_list WHERE command = $1"
         return await self.execute_query(query, (cmd,))
 
     async def commands_all(self):
-        query = 'SELECT command FROM black_list'
+        query = "SELECT command FROM black_list"
         result = await self.fetch_all(query)
-        return '\n'.join([row[0] for row in result])
+        return "\n".join([row[0] for row in result])
 
 
 class DataBase:
     def __init__(self, db_type):
         self.db_type = db_type.lower()
-        if self.db_type == 'sqlite':
+        if self.db_type == "sqlite":
             self.database = SqliteDatabase()
-        elif self.db_type == 'postgresql':
+        elif self.db_type == "postgresql":
             self.database = PostgresqlDatabase()
         else:
-            print(f"{db_type} - неподдерживаемый тип базы данных.\nИспользуйте PostgreSQL или SQLite")
+            print(
+                f"{db_type} - неподдерживаемый тип базы данных.\nИспользуйте PostgreSQL или SQLite"
+            )
 
     async def connect(self):
         await self.database.connect()
@@ -273,4 +279,4 @@ class DataBase:
         return await self.database.commands_all()
 
 
-db = DataBase(db_type=config.database()['type'])
+db = DataBase(db_type=config.database()["type"])

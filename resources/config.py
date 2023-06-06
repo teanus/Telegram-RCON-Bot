@@ -17,7 +17,7 @@
 import yaml
 from pathlib import Path
 
-path = Path(__file__).resolve().parents[1] / 'config.yaml'
+path = Path(__file__).resolve().parents[1] / "config.yaml"
 
 
 def read_yaml():
@@ -26,12 +26,12 @@ def read_yaml():
 
 
 def telegram():
-    return read_yaml()['Telegram']
+    return read_yaml()["Telegram"]
 
 
 def database():
-    return read_yaml()['database']
+    return read_yaml()["database"]
 
 
 def console():
-    return read_yaml()['console']
+    return read_yaml()["console"]
