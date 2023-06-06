@@ -14,7 +14,4 @@
 #    ╚═╝   ╚══════╝╚═╝  ╚═╝╚═╝  ╚═══╝ ╚═════╝ ╚══════╝
 
 
-from keyboards import kb_other
-from keyboards import kb_admin
-from keyboards import kb_client
-from keyboards import kb_common
+from keyboards import kb_admin, kb_client, kb_other
