@@ -54,55 +54,53 @@ async def cancel_settings(message: types.Message, state: FSMContext) -> None:
     await state.finish()
 
 
-async def back_to_state_settings(message: types.Message, state: FSMContext) -> None:
+async def back_to_state_settings(message: types.Message) -> None:
     # выходит из панели выбора действия над командами
     await message.reply("Возвращаемся назад!)", reply_markup=kb_admin.admin_panel_menu)
-    await state.set_state(AdminState.settings)
+    await AdminState.settings.set()
 
 
-async def back_state_add(message: types.Message, state: FSMContext) -> None:
+async def back_state_add(message: types.Message) -> None:
     # выходит из выдачи ролей
     await message.reply(
         "Возвращаемся назад!)", reply_markup=kb_admin.roles_switch_panel
     )
-    await state.set_state(AdminState.give)
+    await AdminState.give.set()
 
 
-async def back_state_remove(message: types.Message, state: FSMContext) -> None:
+async def back_state_remove(message: types.Message) -> None:
     # выходит из удаления роли
     await message.reply(
         "Возвращаемся назад!)", reply_markup=kb_admin.roles_switch_panel
     )
-    await state.set_state(AdminState.remove)
+    await AdminState.remove.set()
 
 
-async def back_state_commands_switch(message: types.Message, state: FSMContext) -> None:
+async def back_state_commands_switch(message: types.Message) -> None:
     await message.reply(
         "Возвращаемся назад!", reply_markup=kb_admin.panel_commands_switch
     )
-    await state.set_state(AdminState.commands)
+    await AdminState.commands.set()
 
 
-async def back_state_remove_roles_switcher(
-    message: types.Message, state: FSMContext
-) -> None:
+async def back_state_remove_roles_switcher(message: types.Message) -> None:
     # выходит из панели роли
     await message.reply("Возвращаемся назад!", reply_markup=kb_admin.admin_panel_menu)
-    await state.set_state(AdminState.settings)
+    await AdminState.settings.set()
 
 
-async def back_state_roles(message: types.Message, state: FSMContext) -> None:
+async def back_state_roles(message: types.Message) -> None:
     # назад к панели ролей
     await message.reply("Возвращаемся назад!", reply_markup=kb_admin.roles_panel)
-    await state.set_state(AdminState.roles_switch)
+    await AdminState.roles_switch.set()
 
 
-async def back_state_remove_command(message: types.Message, state: FSMContext) -> None:
+async def back_state_remove_command(message: types.Message) -> None:
     # назад к панели действия над командами
     await message.reply(
         "Возвращаемся назад!)", reply_markup=kb_admin.panel_commands_switch
     )
-    await state.set_state(AdminState.commands)
+    await AdminState.commands.set()
 
 
 async def roles_switch(message: types.message) -> None:
@@ -150,55 +148,55 @@ async def roles_add_admin(message: types.Message) -> None:
     await AdminState.add_admin.set()
 
 
-async def get_add_user_id(message: types.Message, state: FSMContext) -> None:
+async def get_add_user_id(message: types.Message) -> None:
     user_id = message.from_user.id
     if await db.user_exists(message.text):
         await message.reply(
             f'Пользователь с таким  id уже есть в списке.\nВведите другой id или нажмите "назад"'
         )
-        await state.set_state(AdminState.add_user)
+        await AdminState.add_user.set()
     else:
         await groups_logger("Выдача роли обычного игрока: ", user_id, message.text)
         await message.reply(await db.add_user(message.text))
 
 
-async def get_add_admin_id(message: types.Message, state: FSMContext) -> None:
+async def get_add_admin_id(message: types.Message) -> None:
     user_id = message.from_user.id
     if await db.check_admin_user(message.text):
         await message.reply(
             f'Этот id уже имеет роль администратора.\nВведите другой id или нажмите "назад"'
         )
-        await state.set_state(AdminState.add_admin)
+        await AdminState.add_admin.set()
     else:
         await groups_logger("Выдача роли администратора: ", user_id, message.text)
         await message.reply(await db.add_user(message.text))
 
 
-async def get_remove_user_id(message: types.Message, state: FSMContext) -> None:
+async def get_remove_user_id(message: types.Message) -> None:
     user_id = message.from_user.id
     if not await db.user_exists(message.text):
         await message.reply(
             f'Пользователь с таким  id нет в списке.\nВведите другой id или нажмите "назад"'
         )
-        await state.set_state(AdminState.remove_user)
+        await AdminState.remove_user.set()
     else:
         await groups_logger("Снятие роли пользователя: ", user_id, message.text)
         await message.reply(await db.user_remove(message.text))
 
 
-async def get_remove_admin_id(message: types.Message, state: FSMContext) -> None:
+async def get_remove_admin_id(message: types.Message) -> None:
     user_id = message.from_user.id
     if not await db.check_admin_user(message.text):
         await message.reply(
             f'В бд нет администратора с таким id.\nВведите другой id или нажмите "назад"'
         )
-        await state.set_state(AdminState.remove_admin)
+        await AdminState.remove_admin.set()
     else:
         await groups_logger("Снятие роли администратора: ", user_id, message.text)
         await message.reply(await db.admin_remove(message.text))
 
 
-async def commands_settings(message: types.Message, state: FSMContext) -> None:
+async def commands_settings(message: types.Message) -> None:
     await message.reply(
         f"Список заблокированных команд на данный момент:\n {await db.commands_all()}"
     )
@@ -206,24 +204,24 @@ async def commands_settings(message: types.Message, state: FSMContext) -> None:
         "Выберите, что нужно сделать. Добавить или удалить команды из списка. Либо вернитесь назад",
         reply_markup=kb_admin.panel_commands_switch,
     )
-    await state.set_state(AdminState.commands)
+    await AdminState.commands.set()
 
 
-async def button_commands_add(message: types.Message, state: FSMContext) -> None:
+async def button_commands_add(message: types.Message) -> None:
     await message.reply(
         "Пришлите команду или вернитесь назад", reply_markup=kb_admin.admin_back
     )
-    await state.set_state(AdminState.command_add)
+    await AdminState.command_add.set()
 
 
-async def button_commands_remove(message: types.Message, state: FSMContext) -> None:
+async def button_commands_remove(message: types.Message) -> None:
     await message.reply(
         "Пришлите команду или вернитесь назад", reply_markup=kb_admin.admin_back
     )
-    await state.set_state(AdminState.command_remove)
+    await AdminState.command_remove.set()
 
 
-async def command_add(message: types.Message, state: FSMContext) -> None:
+async def command_add(message: types.Message) -> None:
     user_id = message.from_user.id
     low = message.text.lower()
     if await db.command_exists(low):
@@ -231,17 +229,17 @@ async def command_add(message: types.Message, state: FSMContext) -> None:
             "Эта команда была заблокирована ранее. Введите другую или вернитесь назад"
         )
         await groups_logger("Попытался заблокировать команду: ", user_id, message.text)
-        await state.set_state(AdminState.command_add)
+        await AdminState.command_add.set()
     else:
         await db.add_black_list(low)
         await groups_logger("Добавил команду в черный список", user_id, message.text)
         await message.reply(
             "Команда была заблокирована.\nПришлите еще одну команду, или вернитесь назад"
         )
-        await state.set_state(AdminState.command_add)
+        await AdminState.command_add.set()
 
 
-async def command_remove(message: types.Message, state: FSMContext) -> None:
+async def command_remove(message: types.Message) -> None:
     user_id = message.from_user.id
     low = message.text.lower()
     if await db.command_exists(low):
@@ -250,7 +248,7 @@ async def command_remove(message: types.Message, state: FSMContext) -> None:
         await message.reply(
             "Команда разблокирована!\nПришлите еще команду для разблокировки, или вернитесь назад"
         )
-        await state.set_state(AdminState.command_remove)
+        await AdminState.command_remove.set()
     else:
         await groups_logger(
             "Удаление команды (в списке отсутствует): ", user_id, message.text
@@ -258,7 +256,7 @@ async def command_remove(message: types.Message, state: FSMContext) -> None:
         await message.reply(
             "Данная команда не находится в списке заблокированных.\nПришлите другую команду, или вернитесь назад"
         )
-        await state.set_state(AdminState.command_remove)
+        await AdminState.command_remove.set()
 
 
 def register_handlers_admin(dp: Dispatcher) -> None:
