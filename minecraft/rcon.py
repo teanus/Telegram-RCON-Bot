@@ -15,7 +15,6 @@
 
 
 from os import getenv
-from typing import List, Union
 
 from dotenv import load_dotenv
 from mcrcon import MCRcon
@@ -52,7 +51,7 @@ def replace_color_tag(text: str) -> str:
     return text
 
 
-def command_execute(command: str) -> Union[str, List[str]]:
+def command_execute(command: str) -> list | str:
     try:
         with MCRcon(
             getenv("rcon_host"), getenv("rcon_password"), getenv("rcon_port")
@@ -60,5 +59,5 @@ def command_execute(command: str) -> Union[str, List[str]]:
             mcr.connect()
             response = mcr.command(command)
             return replace_color_tag(response)
-    except:
+    except ConnectionError:
         return f"Произошла ошибка RCON. Повторите попытку:"
