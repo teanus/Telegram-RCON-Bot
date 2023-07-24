@@ -25,9 +25,16 @@ jobs:
       - name: Run Black
         run: black .
 
+      - name: Check for changes
+        id: git-check
+        run: |
+          git diff --exit-code || echo "Форматирование успешно выполнено"
+          echo ::set-output name=changes::$(if [ $? -eq 0 ]; then echo "false"; else echo "true"; fi)
+
       - name: Commit changes
+        if: steps.git-check.outputs.changes == 'true'
         run: |
           git config --local user.email "teanus.ti@gmail.com"
           git config --local user.name "teanus"
-          git commit -am "Автоматическое форматирование кода с помощью Black" --allow-empty
+          git commit -am "Автоматическое форматирование кода с помощью Black"
           git push
