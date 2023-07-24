@@ -11,7 +11,7 @@ Telegram RCON bot для игры Minecraft Bedrock и Java edition
 
 ```bash
   cd telegram-rcon-bot
-  python3 -m pip install -r requirements.txt
+  poetry install
 
 ```
     
