@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "TeaRCON"
+version = "2.0"
+description = "Бот для Telegeram позволяющий выполнять команды на сервере Minecraft по RCON"
+authors = ["TEANUS <teanus@mail.ru>"]
+license = "GPL-3.0"
+readme = "README.md"
+packages = [{include = "telegram_rcon_bot"}]
+
+[tool.poetry.dependencies]
+python = "^3.7"
+aiogram = "2.25.1"
+aiosqlite = "0.19.0"
+asyncpg = "0.27.0"
+python-dotenv = "0.21.1"
+mcrcon = "0.7.0"
+pyyaml = "6.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

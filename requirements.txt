@@ -1,6 +1,0 @@
-aiogram==2.25.1
-aiosqlite==0.19.0
-asyncpg==0.27.0
-python-dotenv==0.21.1
-mcrcon==0.7.0
-PyYAML==6.0
