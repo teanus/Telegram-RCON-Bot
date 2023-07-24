@@ -29,7 +29,7 @@ class FsmOther(StatesGroup):
     rcon = State()
 
 
-async def rcon_cmd(message: types.Message):
+async def rcon_cmd(message: types.Message) -> None:
     chat_id = message.chat.id
     if await db.check_admin_user(chat_id) and await db.user_exists(chat_id):
         await message.reply("Теперь пришли команду", reply_markup=kb_client.rcon_cancel)
@@ -38,7 +38,7 @@ async def rcon_cmd(message: types.Message):
         await message.reply("У вас нет доступа к данной команде. Приобретите доступ.")
 
 
-async def cancel_state_rcon(message: types.Message, state: FSMContext):
+async def cancel_state_rcon(message: types.Message, state: FSMContext) -> None:
     chat_id = message.chat.id
     if await db.check_admin_user(chat_id):
         await message.reply(
@@ -54,7 +54,7 @@ async def cancel_state_rcon(message: types.Message, state: FSMContext):
         await state.finish()
 
 
-async def get_command(message: types.Message, state: FSMContext):
+async def get_command(message: types.Message) -> None:
     low = message.text.lower()
     command = low.split(" ", 1)
     user_id = message.from_user.id
@@ -69,10 +69,10 @@ async def get_command(message: types.Message, state: FSMContext):
         await message.answer(
             "Вы можете продолжить выполнять команды. Просто пришлите мне их. Или введите отмена"
         )
-        await state.set_state(FsmOther.rcon)
+        await FsmOther.rcon.set()
 
 
-def register_handlers_client(dp: Dispatcher):
+def register_handlers_client(dp: Dispatcher) -> None:
     dp.register_message_handler(
         rcon_cmd, Text(startswith=["❗ркон", "/rcon"], ignore_case=True)
     )
