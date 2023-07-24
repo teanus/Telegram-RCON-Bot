@@ -18,6 +18,7 @@ from os import getenv
 
 from dotenv import load_dotenv
 from mcrcon import MCRcon
+from typing import List, Union
 
 load_dotenv()
 
@@ -51,10 +52,10 @@ def replace_color_tag(text: str) -> str:
     return text
 
 
-def command_execute(command: str) -> list | str:
+def command_execute(command: str) -> Union[str, List[str]]:
     try:
         with MCRcon(
-            getenv("rcon_host"), getenv("rcon_password"), getenv("rcon_port")
+                getenv("rcon_host"), getenv("rcon_password"), getenv("rcon_port")
         ) as mcr:
             mcr.connect()
             response = mcr.command(command)
