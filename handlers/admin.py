@@ -22,6 +22,7 @@ from aiogram.dispatcher.filters.state import State, StatesGroup
 from keyboards import kb_admin
 from logger.group_logger import groups_logger
 from provider import db
+from logger.log import logger
 
 
 class AdminState(StatesGroup):
@@ -39,12 +40,13 @@ class AdminState(StatesGroup):
 
 
 async def settings_panel(message: types.Message) -> None:
-    chat_id = message.from_user.id
+    chat_id = message.chat.id
     if await db.check_admin_user(chat_id):
         await message.reply(
             "Вы вошли в админ панель! Выберите действие",
             reply_markup=kb_admin.admin_panel_menu,
         )
+        logger.info(f"Вход в админ панель выполнен пользователем с id: {chat_id}")
         await AdminState.settings.set()
 
 
@@ -149,50 +151,52 @@ async def roles_add_admin(message: types.Message) -> None:
 
 
 async def get_add_user_id(message: types.Message) -> None:
-    user_id = message.from_user.id
+    chat_id = message.chat.id
     if await db.user_exists(message.text):
         await message.reply(
             f'Пользователь с таким  id уже есть в списке.\nВведите другой id или нажмите "назад"'
         )
         await AdminState.add_user.set()
     else:
-        await groups_logger("Выдача роли обычного игрока: ", user_id, message.text)
+        await groups_logger("Выдача роли обычного игрока: ", chat_id, message.text)
         await message.reply(await db.add_user(message.text))
 
 
 async def get_add_admin_id(message: types.Message) -> None:
-    user_id = message.from_user.id
+    chat_id = message.chat.id
     if await db.check_admin_user(message.text):
         await message.reply(
             f'Этот id уже имеет роль администратора.\nВведите другой id или нажмите "назад"'
         )
         await AdminState.add_admin.set()
     else:
-        await groups_logger("Выдача роли администратора: ", user_id, message.text)
+        await groups_logger("Выдача роли администратора: ", chat_id, message.text)
         await message.reply(await db.add_user(message.text))
 
 
 async def get_remove_user_id(message: types.Message) -> None:
-    user_id = message.from_user.id
+    chat_id = message.chat.id
     if not await db.user_exists(message.text):
         await message.reply(
             f'Пользователь с таким  id нет в списке.\nВведите другой id или нажмите "назад"'
         )
         await AdminState.remove_user.set()
     else:
-        await groups_logger("Снятие роли пользователя: ", user_id, message.text)
+        await groups_logger("Снятие роли пользователя: ", chat_id, message.text)
+        logger.info(f"{chat_id} - снял роль пользователя с {message.text}")
         await message.reply(await db.user_remove(message.text))
 
 
 async def get_remove_admin_id(message: types.Message) -> None:
-    user_id = message.from_user.id
+    chat_id = message.chat.id
     if not await db.check_admin_user(message.text):
         await message.reply(
             f'В бд нет администратора с таким id.\nВведите другой id или нажмите "назад"'
         )
         await AdminState.remove_admin.set()
     else:
-        await groups_logger("Снятие роли администратора: ", user_id, message.text)
+        logger.info(f"{chat_id} - снял роль администратора с {message.text}")
+        await groups_logger("Снятие роли администратора: ", chat_id, message.text)
         await message.reply(await db.admin_remove(message.text))
 
 
@@ -222,17 +226,20 @@ async def button_commands_remove(message: types.Message) -> None:
 
 
 async def command_add(message: types.Message) -> None:
-    user_id = message.from_user.id
+    chat_id = message.chat.id
     low = message.text.lower()
     if await db.command_exists(low):
         await message.reply(
             "Эта команда была заблокирована ранее. Введите другую или вернитесь назад"
         )
-        await groups_logger("Попытался заблокировать команду: ", user_id, message.text)
+        logger.info(f"{chat_id} - попытался заблокировать команду {low}, но она уже в списках")
+        await groups_logger("Попытался заблокировать команду: ", chat_id, message.text)
         await AdminState.command_add.set()
+
     else:
         await db.add_black_list(low)
-        await groups_logger("Добавил команду в черный список", user_id, message.text)
+        logger.info(f"{chat_id} - добавил команду в черный список. Команда: {low}")
+        await groups_logger("Добавил команду в черный список", chat_id, message.text)
         await message.reply(
             "Команда была заблокирована.\nПришлите еще одну команду, или вернитесь назад"
         )
@@ -240,18 +247,20 @@ async def command_add(message: types.Message) -> None:
 
 
 async def command_remove(message: types.Message) -> None:
-    user_id = message.from_user.id
+    chat_id = message.chat.id
     low = message.text.lower()
     if await db.command_exists(low):
         await db.remove_black_list(low)
-        await groups_logger("Удаление команды: ", user_id, message.text)
+        logger.info(f"{chat_id} - разблокировал команду {low}")
+        await groups_logger("Удаление команды: ", chat_id, message.text)
         await message.reply(
             "Команда разблокирована!\nПришлите еще команду для разблокировки, или вернитесь назад"
         )
         await AdminState.command_remove.set()
     else:
+        logger.info(f"{chat_id} - попытался разблокировать команду {low}, но она не в списках")
         await groups_logger(
-            "Удаление команды (в списке отсутствует): ", user_id, message.text
+            "Удаление команды (в списке отсутствует): ", chat_id, message.text
         )
         await message.reply(
             "Данная команда не находится в списке заблокированных.\nПришлите другую команду, или вернитесь назад"
