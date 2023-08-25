@@ -15,3 +15,4 @@
 
 
 from logger import group_logger
+from logger import log

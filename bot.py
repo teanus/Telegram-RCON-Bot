@@ -20,14 +20,18 @@ from add_super_admin import console_add_super_admin
 from create_bot import dp
 from handlers import admin, client, common, other
 
+from logger.log import logger
+
 
 async def on_startup(_) -> None:
     print("Бот начал работу!")
+    logger.info("Бот запущен!")
     print(await console_add_super_admin())
 
 
 async def on_shutdown(_) -> None:
     print("Бот выключен")
+    logger.info("Бот выключен")
 
 
 admin.register_handlers_admin(dp)
