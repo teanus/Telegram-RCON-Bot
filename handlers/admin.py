@@ -21,8 +21,8 @@ from aiogram.dispatcher.filters.state import State, StatesGroup
 
 from keyboards import kb_admin
 from logger.group_logger import groups_logger
-from provider import db
 from logger.log import logger
+from provider import db
 
 
 class AdminState(StatesGroup):
@@ -232,7 +232,9 @@ async def command_add(message: types.Message) -> None:
         await message.reply(
             "Эта команда была заблокирована ранее. Введите другую или вернитесь назад"
         )
-        logger.info(f"{chat_id} - попытался заблокировать команду {low}, но она уже в списках")
+        logger.info(
+            f"{chat_id} - попытался заблокировать команду {low}, но она уже в списках"
+        )
         await groups_logger("Попытался заблокировать команду: ", chat_id, message.text)
         await AdminState.command_add.set()
 
@@ -258,7 +260,9 @@ async def command_remove(message: types.Message) -> None:
         )
         await AdminState.command_remove.set()
     else:
-        logger.info(f"{chat_id} - попытался разблокировать команду {low}, но она не в списках")
+        logger.info(
+            f"{chat_id} - попытался разблокировать команду {low}, но она не в списках"
+        )
         await groups_logger(
             "Удаление команды (в списке отсутствует): ", chat_id, message.text
         )

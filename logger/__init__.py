@@ -14,5 +14,4 @@
 #    ╚═╝   ╚══════╝╚═╝  ╚═╝╚═╝  ╚═══╝ ╚═════╝ ╚══════╝
 
 
-from logger import group_logger
-from logger import log
+from logger import group_logger, log
