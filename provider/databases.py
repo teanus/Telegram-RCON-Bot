@@ -35,7 +35,7 @@ class SqliteDatabase:
             self.con = await aiosqlite.connect(config.sqlite()["name"])
             self.cur = await self.con.cursor()
             if self.con:
-                print("SQLite: подключился")
+                print("SQLite подключился")
             table_users = (
                 "CREATE TABLE IF NOT EXISTS users(id INTEGER PRIMARY KEY, telegram_id TEXT, role TEXT "
                 "DEFAULT "
@@ -45,8 +45,8 @@ class SqliteDatabase:
             await self.execute_query(table_users)
             await self.execute_query(table_black_list)
             await self.con.commit()
-        except aiosqlite.Error as e:
-            print(f"Ошибка при подключении к базе данных SQLite: {e}")
+        except aiosqlite.Error as error:
+            print(f"Ошибка при подключении к базе данных SQLite: {error}")
 
     async def disconnect(self) -> None:
         if self.con:
@@ -64,8 +64,8 @@ class SqliteDatabase:
                     pass
             await self.con.commit()
             return True
-        except aiosqlite.Error as e:
-            print(f"Ошибка при выполнении запроса SQLite: {e}")
+        except aiosqlite.Error as error:
+            print(f"Ошибка при выполнении запроса SQLite: {error}")
             return False
 
     async def fetch_all(self, query: str, params=None) -> list:
@@ -79,8 +79,8 @@ class SqliteDatabase:
                 async with self.con.execute(query) as cur:
                     result = await cur.fetchall()
             return result
-        except aiosqlite.Error as e:
-            print(f"Ошибка при выполнении запроса SQLite: {e}")
+        except aiosqlite.Error as error:
+            print(f"Ошибка при выполнении запроса SQLite: {error}")
             return []
 
     async def add_user(self, user_id: str) -> bool:
@@ -153,8 +153,8 @@ class PostgresqlDatabase:
             await self.execute_query(table_users)
             await self.execute_query(table_black_list)
             await self.con.commit()
-        except asyncpg as e:
-            print(f"Ошибка при подключении к базе данных PostgreSQL: {e}")
+        except asyncpg as error:
+            print(f"Ошибка при подключении к базе данных PostgreSQL: {error}")
 
     async def disconnect(self) -> None:
         if self.con:
@@ -170,8 +170,8 @@ class PostgresqlDatabase:
                 await self.cur.execute(query)
             await self.con.commit()
             return True
-        except asyncpg as e:
-            print(f"Ошибка при выполнении запроса PostgreSQL: {e}")
+        except asyncpg as error:
+            print(f"Ошибка при выполнении запроса PostgreSQL: {error}")
             return False
 
     async def fetch_all(self, query: str, params=None) -> list:
@@ -183,8 +183,8 @@ class PostgresqlDatabase:
             else:
                 await self.cur.execute(query)
             return await self.cur.fetchall()
-        except asyncpg as e:
-            print(f"Ошибка при выполнении запроса PostgreSQL: {e}")
+        except asyncpg as error:
+            print(f"Ошибка при выполнении запроса PostgreSQL: {error}")
             return []
 
     async def add_user(self, user_id: str) -> bool:
