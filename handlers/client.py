@@ -82,6 +82,9 @@ async def get_command(message: types.Message) -> None:
             )
         await FsmOther.rcon.set()
     else:
+        await message.reply(
+            f"Команда выполнена. Ответ сервера:\n{rcon.command_execute(low)}"
+        )
         logger.info(f"Администратор с id {user_id} выполнил команду: {message.text}")
 
 
