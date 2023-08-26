@@ -240,7 +240,7 @@ class DataBase:
         elif self.db_type == "postgresql":
             self.database = PostgresqlDatabase()
         else:
-            print(
+            raise ValueError(
                 f"{db_type} - неподдерживаемый тип базы данных.\nИспользуйте PostgreSQL или SQLite"
             )
 
