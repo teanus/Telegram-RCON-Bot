@@ -29,7 +29,8 @@ jobs:
         id: git-check
         run: |
           git diff --exit-code || echo "Форматирование успешно выполнено"
-          echo ::set-output name=changes::$(if [ $? -eq 0 ]; then echo "false"; else echo "true"; fi)
+          echo echo "changes=$(if [ $? -eq 0 ]; then echo "false"; else echo "true"; fi)" >> $GITHUB_ENV
+
 
       - name: Commit changes
         if: steps.git-check.outputs.changes == 'true'
