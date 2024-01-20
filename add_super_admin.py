@@ -28,7 +28,7 @@ async def console_add_super_admin() -> str:
         elif await db.check_admin_user(admin_id):
             return admin_id + " уже есть в списке супер-админов"
         else:
-            await db.admin_add(admin_id)
+            await db.add_admin(admin_id)
             return admin_id + " был добавлен в список супер-админов"
     else:
         return "Режим выдачи роли выключен. Пропускаем"
