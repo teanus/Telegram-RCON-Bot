@@ -96,7 +96,7 @@ class SqliteDatabase:
         query = "DELETE FROM users WHERE telegram_id = ?"
         return await self.execute_query(query, (user_id,))
 
-    async def admin_add(self, user_id: str) -> bool:
+    async def add_admin(self, user_id: str) -> bool:
         query = "INSERT INTO users(telegram_id, role) VALUES(?, ?)"
         return await self.execute_query(query, [user_id, "admin"])
 
@@ -200,7 +200,7 @@ class PostgresqlDatabase:
         query = "DELETE FROM users WHERE telegram_id = $1"
         return await self.execute_query(query, (user_id,))
 
-    async def admin_add(self, user_id: str) -> bool:
+    async def add_admin(self, user_id: str) -> bool:
         query = "INSERT INTO users(telegram_id, role) VALUES($1, $2)"
         return await self.execute_query(query, [user_id, "admin"])
 
@@ -259,8 +259,8 @@ class DataBase:
     async def user_remove(self, user_id: str) -> bool:
         return await self.database.user_remove(user_id)
 
-    async def admin_add(self, user_id: str) -> bool:
-        return await self.database.admin_add(user_id)
+    async def add_admin(self, user_id: str) -> bool:
+        return await self.database.add_admin(user_id)
 
     async def check_admin_user(self, user_id: str) -> bool:
         return await self.database.check_admin_user(user_id)
