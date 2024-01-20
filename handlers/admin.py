@@ -159,7 +159,8 @@ async def get_add_user_id(message: types.Message) -> None:
         await AdminState.add_user.set()
     else:
         await groups_logger("Выдача роли обычного игрока: ", chat_id, message.text)
-        await message.reply(await db.add_user(message.text))
+        await db.add_user(message.text)
+        await message.reply(f"Роль 'обычная' выдана пользователю с id {message.text}")
 
 
 async def get_add_admin_id(message: types.Message) -> None:
@@ -171,7 +172,8 @@ async def get_add_admin_id(message: types.Message) -> None:
         await AdminState.add_admin.set()
     else:
         await groups_logger("Выдача роли администратора: ", chat_id, message.text)
-        await message.reply(await db.add_user(message.text))
+        await db.add_admin(message.text)
+        await message.reply(f"Вы выдали администратора пользователю с id {message.text}")
 
 
 async def get_remove_user_id(message: types.Message) -> None:
