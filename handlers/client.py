@@ -33,9 +33,15 @@ class FsmOther(StatesGroup):
 async def rcon_cmd(message: types.Message) -> None:
     chat_id = message.chat.id
     user_id = message.from_user.id
-    if await db.check_admin_user(chat_id) and await db.user_exists(chat_id):
+    if await db.check_admin_user(chat_id):
         logger.info(
             f"Пользователь с id {user_id} вошел в rcon консоль с правами администратора"
+        )
+        await message.reply("Теперь пришли команду", reply_markup=kb_client.rcon_cancel)
+        await FsmOther.rcon.set()
+    elif await db.user_exists(chat_id):
+        logger.info(
+            f"Пользователь с id {user_id} вошел в rcon консоль с правами \"normal\""
         )
         await message.reply("Теперь пришли команду", reply_markup=kb_client.rcon_cancel)
         await FsmOther.rcon.set()

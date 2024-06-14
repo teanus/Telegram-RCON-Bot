@@ -55,7 +55,7 @@ def replace_color_tag(text: str) -> str:
 def command_execute(command: str) -> Union[str, List[str]]:
     try:
         with MCRcon(
-            getenv("rcon_host"), getenv("rcon_password"), int(getenv("rcon_port"))
+                getenv("rcon_host"), getenv("rcon_password"), int(getenv("rcon_port"))
         ) as mcr:
             mcr.connect()
             response = mcr.command(command)
