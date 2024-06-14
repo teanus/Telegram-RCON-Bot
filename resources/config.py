@@ -45,3 +45,7 @@ def postgresql() -> Dict[str, Any]:
 
 def console() -> Dict[str, Any]:
     return read_yaml()["console"]
+
+
+def logging_config() -> Dict[str, Any]:
+    return read_yaml()["logging"]

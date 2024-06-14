@@ -28,3 +28,8 @@ sqlite:
 
 console:
   give_role: True # Включите, если хотите выдать админ роль (лучше перед этим получить свой id)
+
+logging:
+  file_name: info # Название файла логирования
+  max_bytes: 5242880  # 5 MB
+  backup_count: 2 # количество бэкап файлов
