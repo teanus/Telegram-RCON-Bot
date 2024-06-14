@@ -16,27 +16,23 @@
 
 from aiogram import Dispatcher, types
 
-from keyboards import kb_admin, kb_client, kb_other
+from keyboards import kb_admin, kb_client, kb_other, get_main_menu
 from provider import db
 
 
 async def start(message: types.Message):
     chat_id = message.chat.id
-    if await db.check_admin_user(chat_id):
-        await message.reply(
-            "Привет друг! О, ты же админ! Так начни управлять.",
-            reply_markup=kb_admin.main_menu,
+    menu = await get_main_menu(chat_id)
+    text = (
+        "Привет друг! О, ты же админ! Так начни управлять."
+        if await db.check_admin_user(chat_id)
+        else (
+            "Привет друг. У тебя есть доступ к консоли, удачи!"
+            if await db.user_exists(chat_id)
+            else "Привет друг! Введи /info для отображения информации о боте!"
         )
-    elif await db.user_exists(chat_id):
-        await message.reply(
-            "Привет друг. У тебя есть доступ к консоли, удачи!",
-            reply_markup=kb_client.main_menu,
-        )
-    else:
-        await message.reply(
-            "Привет друг! Введи /info для отображения информации о боте!",
-            reply_markup=kb_other.main_menu,
-        )
+    )
+    await message.reply(text, reply_markup=menu)
 
 
 def register_handlers_common(dp: Dispatcher):
