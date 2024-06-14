@@ -22,7 +22,9 @@ async def console_add_super_admin() -> str:
     if not config.console()["give_role"]:
         return "Режим выдачи роли выключен. Пропускаем"
 
-    admin_id = input("Введите id для выдачи прав super-админа или нажмите Enter для пропуска: ")
+    admin_id = input(
+        "Введите id для выдачи прав super-админа или нажмите Enter для пропуска: "
+    )
     if admin_id == "":
         return "Закрытие"
 

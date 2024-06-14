@@ -231,14 +231,20 @@ async def command_add(message: types.Message) -> None:
     exists = await db.command_exists(low)
 
     if exists:
-        await message.reply("Эта команда была заблокирована ранее. Введите другую или вернитесь назад")
-        logger.info(f"{chat_id} - попытался заблокировать команду {low}, но она уже в списках")
+        await message.reply(
+            "Эта команда была заблокирована ранее. Введите другую или вернитесь назад"
+        )
+        logger.info(
+            f"{chat_id} - попытался заблокировать команду {low}, но она уже в списках"
+        )
         await groups_logger("Попытался заблокировать команду: ", chat_id, message.text)
     else:
         await db.add_black_list(low)
         logger.info(f"{chat_id} - добавил команду в черный список. Команда: {low}")
         await groups_logger("Добавил команду в черный список", chat_id, message.text)
-        await message.reply("Команда была заблокирована. Пришлите еще одну команду, или вернитесь назад")
+        await message.reply(
+            "Команда была заблокирована. Пришлите еще одну команду, или вернитесь назад"
+        )
 
     await AdminState.command_add.set()
 
