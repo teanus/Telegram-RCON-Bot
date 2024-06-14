@@ -51,7 +51,7 @@ def replace_color_tag(text: str) -> str:
     return text
 
 
-async def command_execute(command: str) -> Union[str, List[str, int]]:
+async def command_execute(command: str) -> Union[str, List[str]]:
     rcon_host = os.getenv("rcon_host")
     rcon_port = int(os.getenv("rcon_port"))
     rcon_password = os.getenv("rcon_password")
