@@ -14,26 +14,32 @@
 #    ╚═╝   ╚══════╝╚═╝  ╚═╝╚═╝  ╚═══╝ ╚═════╝ ╚══════╝
 
 
-from aiogram import Dispatcher, types
+from aiogram import Router, types
+from aiogram import F
+from aiogram.filters import Command
 
-from keyboards import kb_admin, kb_client, kb_other, get_main_menu
-from provider import db
+other_router = Router()
 
 
-async def start(message: types.Message):
+async def id_cmd(message: types.Message) -> None:
     chat_id = message.chat.id
-    menu = await get_main_menu(chat_id)
-    text = (
-        "Привет друг! О, ты же админ! Так начни управлять."
-        if await db.check_admin_user(chat_id)
-        else (
-            "Привет друг. У тебя есть доступ к консоли, удачи!"
-            if await db.user_exists(chat_id)
-            else "Привет друг! Введи /info для отображения информации о боте!"
-        )
+    await message.reply(f"Ваш id: {chat_id}")
+
+
+async def info_cmd(message: types.Message) -> None:
+    await message.reply(
+        "Бот написан на полностью бесплатной основе\nРазработчик: t.me/teanus"
     )
-    await message.reply(text, reply_markup=menu)
 
 
-def register_handlers_common(dp: Dispatcher):
-    dp.register_message_handler(start)
+async def support_cmd(message: types.Message) -> None:
+    await message.reply("Канал поддержки: site.ru")
+
+
+def register_routers() -> None:
+    other_router.message.register(id_cmd, F.text.lower() == "🆔 айди")
+    other_router.message.register(id_cmd, Command("id"))
+    other_router.message.register(info_cmd, F.text.lower() == "🆘 инфо")
+    other_router.message.register(id_cmd, Command("info"))
+    other_router.message.register(support_cmd, Command("support"))
+    other_router.message.register(support_cmd, F.text.lower() == "🆘 поддержка")

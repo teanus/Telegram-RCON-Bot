@@ -14,14 +14,30 @@
 #    ╚═╝   ╚══════╝╚═╝  ╚═╝╚═╝  ╚═══╝ ╚═════╝ ╚══════╝
 
 
-import os
+from aiogram import Router
+from aiogram.types import Message
 
-from aiogram import Bot
-from aiogram.contrib.fsm_storage.memory import MemoryStorage
-from aiogram.dispatcher import Dispatcher
-from dotenv import load_dotenv
+from keyboards import get_main_menu
+from provider import db
 
-load_dotenv()
-storage = MemoryStorage()
-bot = Bot(os.getenv("TOKEN"))
-dp = Dispatcher(bot, storage=storage)
+common_router = Router()
+
+
+@common_router.message()
+async def start(message: Message) -> None:
+    chat_id = message.chat.id
+    menu = await get_main_menu(chat_id)
+    text = (
+        "Привет друг! О, ты же админ! Так начни управлять."
+        if await db.check_admin_user(chat_id)
+        else (
+            "Привет друг. У тебя есть доступ к консоли, удачи!"
+            if await db.user_exists(chat_id)
+            else "Привет друг! Введи /info для отображения информации о боте!"
+        )
+    )
+    await message.reply(text, reply_markup=menu)
+
+
+def register_routers() -> None:
+    common_router.message.register(start)

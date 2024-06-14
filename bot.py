@@ -14,31 +14,41 @@
 #    ╚═╝   ╚══════╝╚═╝  ╚═╝╚═╝  ╚═══╝ ╚═════╝ ╚══════╝
 
 
-from aiogram.utils import executor
+import asyncio
+from create_bot import bot, dp
+from routers.admin import admin_router, register_routers as register_admin_handlers
+from routers.client import client_router, register_routers as register_client_handlers
+from routers.other import other_router, register_routers as register_other_handlers
+from routers.common import common_router, register_routers as register_common_handlers
 
-from add_super_admin import console_add_super_admin
-from create_bot import dp
-from handlers import admin, client, common, other
 from logger.log import logger
 
 
-async def on_startup(_) -> None:
+async def on_startup() -> None:
     print("Бот начал работу!")
     logger.info("Бот запущен!")
-    print(await console_add_super_admin())
 
 
-async def on_shutdown(_) -> None:
+async def on_shutdown() -> None:
     print("Бот выключен")
     logger.info("Бот выключен")
 
 
-admin.register_handlers_admin(dp)
-client.register_handlers_client(dp)
-other.register_handlers_other(dp)
-common.register_handlers_common(dp)
+async def main():
+    dp.startup.register(on_startup)
+
+    dp.include_router(other_router)
+    dp.include_router(client_router)
+    dp.include_router(admin_router)
+    dp.include_router(common_router)
+    # Регистрация обработчиков для каждого роутера
+    register_other_handlers()
+    register_client_handlers()
+    register_admin_handlers()
+    register_common_handlers()
+    await bot.delete_webhook(drop_pending_updates=True)
+    await dp.start_polling(bot)
+
 
 if __name__ == "__main__":
-    executor.start_polling(
-        dp, skip_updates=True, on_startup=on_startup, on_shutdown=on_shutdown
-    )
+    asyncio.run(main())
