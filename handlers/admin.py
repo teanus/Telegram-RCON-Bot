@@ -51,34 +51,39 @@ async def cancel_settings(message: types.Message, state: FSMContext) -> None:
     await state.finish()
 
 
+async def back_to_state(message: types.Message, state_to_set) -> None:
+    await message.reply("Возвращаемся назад!", reply_markup=kb_admin.roles_switch_panel)
+    await state_to_set.set()
+
+
+async def back_state_add(message: types.Message) -> None:
+    await back_to_state(message, AdminState.give)
+
+
+async def back_state_remove(message: types.Message) -> None:
+    await back_to_state(message, AdminState.remove)
+
+
 async def back_to_state_settings(message: types.Message) -> None:
     await message.reply("Возвращаемся назад!", reply_markup=kb_admin.admin_panel_menu)
     await AdminState.settings.set()
 
 
-async def back_state_add(message: types.Message) -> None:
-    await message.reply("Возвращаемся назад!", reply_markup=kb_admin.roles_switch_panel)
-    await AdminState.give.set()
-
-
-async def back_state_remove(message: types.Message) -> None:
-    await message.reply("Возвращаемся назад!", reply_markup=kb_admin.roles_switch_panel)
-    await AdminState.remove.set()
+async def back_to_state_on_markup(message: types.Message, reply_text: str, markup, state_to_set) -> None:
+    await message.reply(reply_text, reply_markup=markup)
+    await state_to_set.set()
 
 
 async def back_state_commands_switch(message: types.Message) -> None:
-    await message.reply("Возвращаемся назад!", reply_markup=kb_admin.panel_commands_switch)
-    await AdminState.commands.set()
+    await back_to_state_on_markup(message, "Возвращаемся назад!", kb_admin.panel_commands_switch, AdminState.commands)
 
 
 async def back_state_remove_roles_switcher(message: types.Message) -> None:
-    await message.reply("Возвращаемся назад!", reply_markup=kb_admin.admin_panel_menu)
-    await AdminState.settings.set()
+    await back_to_state_on_markup(message, "Возвращаемся назад!", kb_admin.admin_panel_menu, AdminState.settings)
 
 
 async def back_state_roles(message: types.Message) -> None:
-    await message.reply("Возвращаемся назад!", reply_markup=kb_admin.roles_panel)
-    await AdminState.roles_switch.set()
+    await back_to_state_on_markup(message, "Возвращаемся назад!", kb_admin.roles_panel, AdminState.roles_switch)
 
 
 async def roles_switch(message: types.Message) -> None:
@@ -211,8 +216,14 @@ async def command_remove(message: types.Message) -> None:
 
 
 def register_handlers_admin(dp: Dispatcher) -> None:
+    # Регистрация обработчиков для панели настроек
     dp.register_message_handler(settings_panel, Text(startswith="⚙управление", ignore_case=True))
     dp.register_message_handler(cancel_settings, Text(equals="◀отмена", ignore_case=True), state=AdminState.settings)
+    dp.register_message_handler(roles_switch, Text(startswith="📝роли", ignore_case=True), state=AdminState.settings)
+    dp.register_message_handler(commands_settings, Text(equals="📝команды", ignore_case=True),
+                                state=AdminState.settings)
+
+    # Регистрация обработчиков для кнопки "назад"
     dp.register_message_handler(back_to_state_settings, Text(equals="⏹назад", ignore_case=True),
                                 state=AdminState.commands)
     dp.register_message_handler(back_state_add, Text(equals="⏹назад", ignore_case=True),
@@ -225,19 +236,18 @@ def register_handlers_admin(dp: Dispatcher) -> None:
                                 state=[AdminState.remove_user, AdminState.remove_admin])
     dp.register_message_handler(back_state_commands_switch, Text(equals="⏹назад", ignore_case=True),
                                 state=[AdminState.command_add, AdminState.command_remove])
-    dp.register_message_handler(roles_switch, Text(startswith="📝роли", ignore_case=True), state=AdminState.settings)
+
     dp.register_message_handler(give_roles, Text(equals="📝выдать", ignore_case=True), state=AdminState.roles_switch)
     dp.register_message_handler(remove_role, Text(equals="📝снять", ignore_case=True), state=AdminState.roles_switch)
-    dp.register_message_handler(remove_role_user, Text(equals="🪪обычный", ignore_case=True), state=AdminState.remove)
-    dp.register_message_handler(remove_role_admin, Text(equals="🪪админ", ignore_case=True), state=AdminState.remove)
-    dp.register_message_handler(get_remove_user_id, state=AdminState.remove_user)
-    dp.register_message_handler(get_remove_admin_id, state=AdminState.remove_admin)
     dp.register_message_handler(roles_add_user, Text(equals="🪪обычный", ignore_case=True), state=AdminState.give)
     dp.register_message_handler(roles_add_admin, Text(equals="🪪админ", ignore_case=True), state=AdminState.give)
-    dp.register_message_handler(get_add_user_id, state=AdminState.add_user)
-    dp.register_message_handler(get_add_admin_id, state=AdminState.add_admin)
-    dp.register_message_handler(commands_settings, Text(equals="📝команды", ignore_case=True),
-                                state=AdminState.settings)
+    dp.register_message_handler(remove_role_user, Text(equals="🪪обычный", ignore_case=True), state=AdminState.remove)
+    dp.register_message_handler(remove_role_admin, Text(equals="🪪админ", ignore_case=True), state=AdminState.remove)
+
+    dp.register_message_handler(get_remove_user_id, state=AdminState.remove_user)
+    dp.register_message_handler(get_remove_admin_id, state=AdminState.remove_admin)
+
+
     dp.register_message_handler(button_commands_add, Text(equals="⛔добавить", ignore_case=True),
                                 state=AdminState.commands)
     dp.register_message_handler(button_commands_remove, Text(equals="🗑удалить", ignore_case=True),
