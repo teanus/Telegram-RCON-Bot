@@ -16,41 +16,50 @@
 
 from aiogram.types import KeyboardButton, ReplyKeyboardMarkup
 
-button_id = KeyboardButton("🆔айди")
-button_rcon = KeyboardButton("❗ркон")
-button_info = KeyboardButton("🆘инфо")
-button_admin_panel = KeyboardButton("⚙управление")
-button_support = KeyboardButton("🆘поддержка")
-main_menu = ReplyKeyboardMarkup(resize_keyboard=True).add(
-    button_id, button_rcon, button_info, button_support, button_admin_panel
+main_menu = ReplyKeyboardMarkup(
+    resize_keyboard=True,
+    keyboard=[
+        [KeyboardButton(text="🆔 Айди"), KeyboardButton(text="❗ Ркон")],
+        [KeyboardButton(text="🆘 Инфо"), KeyboardButton(text="⚙ Управление")],
+        [KeyboardButton(text="🆘 Поддержка")],
+    ],
 )
 
-button_cancel = KeyboardButton("◀отмена")
-button_panel_roles = KeyboardButton("📝роли")
-button_panel_commands = KeyboardButton("📝команды")
-admin_panel_menu = ReplyKeyboardMarkup(resize_keyboard=True).add(
-    button_panel_roles, button_cancel, button_panel_commands
+admin_panel_menu = ReplyKeyboardMarkup(
+    resize_keyboard=True,
+    keyboard=[
+        [KeyboardButton(text="📝 Роли"), KeyboardButton(text="📝 Команды")],
+        [KeyboardButton(text="◀ Отмена")],
+    ],
 )
 
-button_panel_add_roles = KeyboardButton("📝выдать")
-button_panel_remove_roles = KeyboardButton("📝снять")
-button_back = KeyboardButton("⏹назад")
-roles_panel = ReplyKeyboardMarkup(resize_keyboard=True).add(
-    button_panel_add_roles, button_back, button_panel_remove_roles
+roles_panel = ReplyKeyboardMarkup(
+    resize_keyboard=True,
+    keyboard=[
+        [KeyboardButton(text="📝 Выдать"), KeyboardButton(text="📝 Снять")],
+        [KeyboardButton(text="⏹ Назад")],
+    ],
 )
 
-button_panel_admin = KeyboardButton("🪪админ")
-button_panel_user = KeyboardButton("🪪обычный")
-button_back = KeyboardButton("⏹назад")
-roles_switch_panel = ReplyKeyboardMarkup(resize_keyboard=True).add(
-    button_panel_user, button_back, button_panel_admin
+roles_switch_panel = ReplyKeyboardMarkup(
+    resize_keyboard=True,
+    keyboard=[
+        [KeyboardButton(text="🪪 Админ"), KeyboardButton(text="🪪 Обычный")],
+        [KeyboardButton(text="⏹ Назад")],
+    ],
 )
 
-button_panel_commands_add = KeyboardButton("⛔добавить")
-button_panel_commands_remove = KeyboardButton("🗑удалить")
-button_back = KeyboardButton("⏹назад")
-panel_commands_switch = ReplyKeyboardMarkup(resize_keyboard=True).add(
-    button_panel_commands_add, button_back, button_panel_commands_remove
+panel_commands_switch = ReplyKeyboardMarkup(
+    resize_keyboard=True,
+    keyboard=[
+        [
+            KeyboardButton(text="⛔ Добавить"),
+            KeyboardButton(text="🗑 Удалить"),
+        ],
+        [KeyboardButton(text="⏹ Назад")],
+    ],
 )
-button_back = KeyboardButton("⏹назад")
-admin_back = ReplyKeyboardMarkup(resize_keyboard=True).add(button_back)
+
+admin_back = ReplyKeyboardMarkup(
+    resize_keyboard=True, keyboard=[[KeyboardButton(text="⏹ Назад")]]
+)
