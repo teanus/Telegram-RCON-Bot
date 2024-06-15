@@ -16,13 +16,15 @@
 
 from aiogram.types import KeyboardButton, ReplyKeyboardMarkup
 
-button_id = KeyboardButton("🆔айди")
-button_rcon = KeyboardButton("❗ркон")
-button_info = KeyboardButton("🆘инфо")
-button_support = KeyboardButton("🆘поддержка")
-main_menu = ReplyKeyboardMarkup(resize_keyboard=True).add(
-    button_id, button_rcon, button_info, button_support
+main_menu = ReplyKeyboardMarkup(
+    resize_keyboard=True,
+    keyboard=[
+        [KeyboardButton(text="🆔 Айди"), KeyboardButton(text="❗ Ркон")],
+        [KeyboardButton(text="🆘 Инфо"), KeyboardButton(text="⚙ Управление")],
+        [KeyboardButton(text="🆘 Поддержка")],
+    ],
 )
 
-button_cancel = KeyboardButton("◀отмена")
-rcon_cancel = ReplyKeyboardMarkup(resize_keyboard=True).add(button_cancel)
+rcon_cancel = ReplyKeyboardMarkup(
+    resize_keyboard=True, keyboard=[[KeyboardButton(text="◀ Отмена")]]
+)

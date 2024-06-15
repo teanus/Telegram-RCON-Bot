@@ -13,24 +13,27 @@
 #    ██║   ███████╗██║  ██║██║ ╚████║╚██████╔╝███████║
 #    ╚═╝   ╚══════╝╚═╝  ╚═╝╚═╝  ╚═══╝ ╚═════╝ ╚══════╝
 
-
-from aiogram import Dispatcher, types
-from aiogram.dispatcher import FSMContext
-from aiogram.dispatcher.filters import Text
-from aiogram.dispatcher.filters.state import State, StatesGroup
-
-from keyboards import kb_admin, kb_client, get_main_menu
+from aiogram import Router, types
+from aiogram.fsm.context import FSMContext
+from aiogram.fsm.state import State, StatesGroup
+from aiogram import F
+from aiogram.filters import StateFilter
+from keyboards import kb_client, get_main_menu
 from logger.group_logger import groups_logger
 from logger.log import logger
 from minecraft import rcon
 from provider import db
+from aiogram.filters import Command
 
 
-class FsmOther(StatesGroup):
+class FsmClient(StatesGroup):
     rcon = State()
 
 
-async def rcon_cmd(message: types.Message) -> None:
+client_router = Router()
+
+
+async def rcon_cmd(message: types.Message, state: FSMContext) -> None:
     chat_id = message.chat.id
     user_id = message.from_user.id
     is_admin = await db.check_admin_user(chat_id)
@@ -40,7 +43,7 @@ async def rcon_cmd(message: types.Message) -> None:
             f"Пользователь с id {user_id} вошел в rcon консоль с правами {role}"
         )
         await message.reply("Теперь пришли команду", reply_markup=kb_client.rcon_cancel)
-        await FsmOther.rcon.set()
+        await state.set_state(FsmClient.rcon)
     else:
         await message.reply("У вас нет доступа к данной команде. Приобретите доступ.")
 
@@ -54,10 +57,10 @@ async def cancel_state_rcon(message: types.Message, state: FSMContext) -> None:
         else "Ты вышел из консоли. Каковы будут дальнейшие действия?"
     )
     await message.reply(text, reply_markup=main_menu)
-    await state.finish()
+    await state.clear()
 
 
-async def get_command(message: types.Message) -> None:
+async def get_command(message: types.Message, state: FSMContext) -> None:
     chat_id = message.chat.id
     user_id = message.from_user.id
     low = message.text.lower()
@@ -72,20 +75,23 @@ async def get_command(message: types.Message) -> None:
     else:
         result = rcon.command_execute(low)
         role = "Администратор" if await db.check_admin_user(chat_id) else "Пользователь"
-        logger.info(f"{role} с id {user_id} выполнил команду: {message.text}")
+        logger.info(f"{role} с id {user_id} выполнил команду: {low}")
         await groups_logger("RCON: ", user_id, message.text)
         await message.reply(f"Команда выполнена. Ответ сервера:\n{result}")
         await message.answer(
             "Вы можете продолжить выполнять команды. Просто пришлите мне их. Или введите отмена"
         )
-        await FsmOther.rcon.set()
+        await state.set_state(FsmClient.rcon)
 
 
-def register_handlers_client(dp: Dispatcher) -> None:
-    dp.register_message_handler(
-        rcon_cmd, Text(startswith=["❗ркон", "/rcon"], ignore_case=True)
+def register_routers() -> None:
+    client_router.message.register(
+        rcon_cmd, F.text.lower() == "❗ ркон",
     )
-    dp.register_message_handler(
-        cancel_state_rcon, Text(equals="◀отмена"), state=FsmOther.rcon
+    client_router.message.register(
+        rcon_cmd, Command("/rcon")
     )
-    dp.register_message_handler(get_command, state=FsmOther.rcon)
+    client_router.message.register(
+        cancel_state_rcon, F.text.lower() == "◀ отмена", StateFilter(FsmClient.rcon)
+    )
+    client_router.message.register(get_command, StateFilter(FsmClient.rcon))
