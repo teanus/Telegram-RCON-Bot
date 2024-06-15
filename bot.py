@@ -20,11 +20,12 @@ from routers.admin import admin_router, register_routers as register_admin_handl
 from routers.client import client_router, register_routers as register_client_handlers
 from routers.other import other_router, register_routers as register_other_handlers
 from routers.common import common_router, register_routers as register_common_handlers
-
+from add_super_admin import console_add_super_admin
 from logger.log import logger
 
 
 async def on_startup() -> None:
+    await console_add_super_admin()
     print("Бот начал работу!")
     logger.info("Бот запущен!")
 
