@@ -14,15 +14,16 @@
 #    ╚═╝   ╚══════╝╚═╝  ╚═╝╚═╝  ╚═══╝ ╚═════╝ ╚══════╝
 
 from aiogram import Router, types
+from aiogram.filters import StateFilter
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
-from aiogram.filters import StateFilter
-from keyboards import kb_client, get_main_menu
+
+from custom_filters import TextInFilter
+from keyboards import get_main_menu, kb_client
 from logger.group_logger import groups_logger
 from logger.log import logger
 from minecraft import rcon
 from provider import db
-from custom_filters import TextInFilter
 
 
 class FsmClient(StatesGroup):
@@ -84,10 +85,10 @@ async def get_command(message: types.Message, state: FSMContext) -> None:
 
 
 async def register_routers() -> None:
+    client_router.message.register(rcon_cmd, TextInFilter(["/rcon", "❗ ркон"]))
     client_router.message.register(
-        rcon_cmd, TextInFilter(["/rcon", "❗ ркон"])
-    )
-    client_router.message.register(
-        cancel_state_rcon, TextInFilter(["◀ отмена", "back"]), StateFilter(FsmClient.rcon)
+        cancel_state_rcon,
+        TextInFilter(["◀ отмена", "back"]),
+        StateFilter(FsmClient.rcon),
     )
     client_router.message.register(get_command, StateFilter(FsmClient.rcon))

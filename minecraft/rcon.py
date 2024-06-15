@@ -16,8 +16,9 @@
 
 import os
 from typing import List, Union
-from dotenv import load_dotenv
+
 from aiomcrcon import Client
+from dotenv import load_dotenv
 
 load_dotenv()
 

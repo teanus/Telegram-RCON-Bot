@@ -1,6 +1,7 @@
 from aiogram import types
-from provider import db
+
 from keyboards import kb_admin, kb_client, kb_other
+from provider import db
 
 
 async def get_main_menu(user_id: int) -> types.ReplyKeyboardMarkup:

@@ -14,6 +14,7 @@
 #    ╚═╝   ╚══════╝╚═╝  ╚═╝╚═╝  ╚═══╝ ╚═════╝ ╚══════╝
 
 from os import getenv
+
 import aiosqlite
 import asyncpg
 from dotenv import load_dotenv

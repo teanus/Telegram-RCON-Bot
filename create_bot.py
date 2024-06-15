@@ -16,9 +16,8 @@
 
 import os
 
-from aiogram import Bot
+from aiogram import Bot, Dispatcher
 from aiogram.fsm.storage.memory import MemoryStorage
-from aiogram import Dispatcher
 from dotenv import load_dotenv
 
 load_dotenv()

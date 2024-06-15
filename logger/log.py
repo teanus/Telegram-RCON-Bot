@@ -15,6 +15,7 @@
 
 import logging
 from logging.handlers import RotatingFileHandler
+
 from resources import config
 
 logger = logging.getLogger(__name__)
