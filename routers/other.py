@@ -39,5 +39,5 @@ async def support_cmd(message: types.Message) -> None:
 
 def register_routers() -> None:
     other_router.message.register(id_cmd, TextInFilter(["/id", "🆔 айди"]))
-    other_router.message.register(info_cmd(), TextInFilter(["/info", "🆘 инфо"]))
+    other_router.message.register(info_cmd, TextInFilter(["/info", "🆘 инфо"]))
     other_router.message.register(support_cmd, TextInFilter(["/support","🆘 поддержка"]))
