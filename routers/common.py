@@ -39,5 +39,5 @@ async def start(message: Message) -> None:
     await message.reply(text, reply_markup=menu)
 
 
-def register_routers() -> None:
+async def register_routers() -> None:
     common_router.message.register(start)

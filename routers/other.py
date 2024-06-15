@@ -37,7 +37,7 @@ async def support_cmd(message: types.Message) -> None:
     await message.reply("Канал поддержки: site.ru")
 
 
-def register_routers() -> None:
+async def register_routers() -> None:
     other_router.message.register(id_cmd, TextInFilter(["/id", "🆔 айди"]))
     other_router.message.register(info_cmd, TextInFilter(["/info", "🆘 инфо"]))
     other_router.message.register(support_cmd, TextInFilter(["/support","🆘 поддержка"]))

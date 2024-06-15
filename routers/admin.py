@@ -14,7 +14,7 @@
 #    ╚═╝   ╚══════╝╚═╝  ╚═╝╚═╝  ╚═══╝ ╚═════╝ ╚══════╝
 
 
-from aiogram import Router, types, F
+from aiogram import Router, types
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.filters import StateFilter
@@ -22,6 +22,7 @@ from keyboards import kb_admin
 from logger.group_logger import groups_logger
 from logger.log import logger
 from provider import db
+from custom_filters import TextInFilter
 
 
 class AdminState(StatesGroup):
@@ -288,81 +289,81 @@ async def command_remove(message: types.Message) -> None:
     await message.answer(success_message)
 
 
-def register_routers() -> None:
+async def register_routers() -> None:
     admin_router.message.register(
-        settings_panel, F.text.lower() == "⚙ управление"
+        settings_panel, TextInFilter(["⚙ управление"])
     )
-    admin_router.message.register(cancel_settings, F.text.lower() == "◀ отмена",
+    admin_router.message.register(cancel_settings, TextInFilter(["◀ отмена"]),
                                   StateFilter(AdminState.settings)
                                   )
 
 
 admin_router.message.register(
     roles_switch,
-    F.text.lower() == "📝 роли",
+    TextInFilter(["📝 роли"]),
     StateFilter(AdminState.settings)
 )
 admin_router.message.register(
     commands_settings,
-    F.text.lower() == "📝 команды",
+    TextInFilter(["📝 команды"]),
     StateFilter(AdminState.settings)
 )
 
 admin_router.message.register(
     back_to_state_settings,
-    F.text.lower() == "⏹ назад",
+    TextInFilter(["⏹ назад"]),
     StateFilter(AdminState.commands)
 )
 admin_router.message.register(
     back_state_add,
-    F.text.lower() == "⏹ назад",
+    TextInFilter(["⏹ назад"]),
     StateFilter(AdminState.add_user, AdminState.add_admin),
 )
 admin_router.message.register(
     back_state_remove_roles_switcher,
-    F.text(equals="⏹ назад", ignore_case=True),
+    TextInFilter(["⏹ назад"]),
     StateFilter(AdminState.roles_switch),
 )
 admin_router.message.register(
     back_state_roles,
-    F.text.lower() == "⏹ назад",
+    TextInFilter(["⏹ назад"]),
     StateFilter(AdminState.remove, AdminState.give)
 )
 admin_router.message.register(
     back_state_remove,
-    F.text.lower() == "⏹ назад",
+    TextInFilter(["⏹ назад"]),
     StateFilter(AdminState.remove_user, AdminState.remove_admin)
 )
 admin_router.message.register(
     back_state_commands_switch,
-    F.text.lower() == "⏹ назад",
+    TextInFilter(["⏹ назад"]),
     StateFilter(AdminState.command_add, AdminState.command_remove)
 )
 
 admin_router.message.register(
     give_roles,
-    F.text.lower() == "📝 выдать",
+    TextInFilter(["📝 выдать"]),
     StateFilter(AdminState.roles_switch)
 )
 admin_router.message.register(
     remove_role,
-    F.text.lower() == "📝 снять",
+    TextInFilter(["📝 снять"]),
     StateFilter(AdminState.roles_switch)
 )
 admin_router.message.register(
-    roles_add_user, F.text.lower() == "🪪 обычный", StateFilter(AdminState.give)
+    roles_add_user, TextInFilter(["🪪 обычный"]), StateFilter(AdminState.give)
 )
 admin_router.message.register(
-    roles_add_admin, F.text.lower() == "🪪 админ", StateFilter(AdminState.give)
+    roles_add_admin, TextInFilter(["🪪 админ"]), StateFilter(AdminState.give)
 )
 admin_router.message.register(
     remove_role_user,
-    F.text.lower() == "🪪 обычный",
+    TextInFilter(["🪪 обычный"]),
     StateFilter(AdminState.remove)
 )
 admin_router.message.register(
     remove_role_admin,
-    F.text.lower() == "🪪 админ",
+    TextInFilter(["🪪 админ"]),
     StateFilter(AdminState.remove)
 )
 
@@ -371,12 +372,12 @@ admin_router.message.register(get_remove_admin_id, StateFilter(AdminState.remove
 
 admin_router.message.register(
     button_commands_add,
-    F.text(equals="⛔ добавить", ignore_case=True),
+    TextInFilter(["⛔ добавить"]),
     StateFilter(AdminState.commands)
 )
 admin_router.message.register(
     button_commands_remove,
-    F.text(equals="🗑 удалить", ignore_case=True),
+    TextInFilter(["🗑 удалить"]),
     StateFilter(AdminState.commands)
 )
 admin_router.message.register(command_add, StateFilter(AdminState.command_add))

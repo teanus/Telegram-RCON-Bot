@@ -43,10 +43,10 @@ async def main():
     dp.include_router(admin_router)
     dp.include_router(common_router)
     # Регистрация обработчиков для каждого роутера
-    register_other_handlers()
-    register_client_handlers()
-    register_admin_handlers()
-    register_common_handlers()
+    await register_other_handlers()
+    await register_client_handlers()
+    await register_admin_handlers()
+    await register_common_handlers()
     await bot.delete_webhook(drop_pending_updates=True)
     await dp.start_polling(bot)
 
