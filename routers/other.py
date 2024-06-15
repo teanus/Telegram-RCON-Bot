@@ -17,6 +17,7 @@
 from aiogram import Router, types
 from aiogram import F
 from aiogram.filters import Command
+from custom_filters import TextInFilter
 
 other_router = Router()
 
@@ -37,9 +38,6 @@ async def support_cmd(message: types.Message) -> None:
 
 
 def register_routers() -> None:
-    other_router.message.register(id_cmd, F.text.lower() == "🆔 айди")
-    other_router.message.register(id_cmd, Command("id"))
-    other_router.message.register(info_cmd, F.text.lower() == "🆘 инфо")
-    other_router.message.register(id_cmd, Command("info"))
-    other_router.message.register(support_cmd, Command("support"))
-    other_router.message.register(support_cmd, F.text.lower() == "🆘 поддержка")
+    other_router.message.register(id_cmd, TextInFilter(["/id", "🆔 айди"]))
+    other_router.message.register(info_cmd(), TextInFilter(["/info", "🆘 инфо"]))
+    other_router.message.register(support_cmd, TextInFilter(["/support","🆘 поддержка"]))
