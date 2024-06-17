@@ -9,4 +9,4 @@ class TextInFilter(BaseFilter):
         self.texts = [text.lower() for text in texts]
 
     async def __call__(self, message: Message) -> bool:
-        return message.text.strip().lower() in self.texts
+        return message.text.lower() in self.texts
