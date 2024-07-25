@@ -73,7 +73,7 @@ async def get_command(message: types.Message, state: FSMContext) -> None:
         await groups_logger("RCON: ", user_id, message.text)
         await message.reply("Команда заблокирована! Используйте другую:)")
     else:
-        result = rcon.command_execute(low)
+        result = await rcon.command_execute(low)
         role = "Администратор" if await db.check_admin_user(chat_id) else "Пользователь"
         logger.info(f"{role} с id {user_id} выполнил команду: {low}")
         await groups_logger("RCON: ", user_id, message.text)

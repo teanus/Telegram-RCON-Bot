@@ -14,11 +14,11 @@
 #    ╚═╝   ╚══════╝╚═╝  ╚═╝╚═╝  ╚═══╝ ╚═════╝ ╚══════╝
 
 
-from os import getenv
-
-from dotenv import load_dotenv
-from mcrcon import MCRcon
+import os
 from typing import List, Union
+
+from aiomcrcon import Client
+from dotenv import load_dotenv
 
 load_dotenv()
 
@@ -52,13 +52,17 @@ def replace_color_tag(text: str) -> str:
     return text
 
 
-def command_execute(command: str) -> Union[str, List[str]]:
+async def command_execute(command: str) -> Union[str, List[str]]:
+    rcon_host = os.getenv("rcon_host")
+    rcon_port = int(os.getenv("rcon_port"))
+    rcon_password = os.getenv("rcon_password")
     try:
-        with MCRcon(
-            getenv("rcon_host"), getenv("rcon_password"), int(getenv("rcon_port"))
-        ) as mcr:
-            mcr.connect()
-            response = mcr.command(command)
+        async with Client(rcon_host, rcon_port, rcon_password) as mcr:
+            response, status = await mcr.send_cmd(command)
+            if status != 0:
+                return f"Ошибка выполнения команды: статус {status}"
             return replace_color_tag(response)
+    except ValueError:
+        return "Ошибка: Неправильный формат порта RCON."
     except ConnectionError:
-        return f"Произошла ошибка RCON. Повторите попытку:"
+        return "Произошла ошибка RCON. Повторите попытку."
