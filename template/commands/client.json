@@ -1,0 +1,11 @@
+{
+  "valid_commands": {
+    "rcon": [
+      "❗ ркон"
+    ],
+    "cancel": [
+      "◀ отмена",
+      "cancel"
+    ]
+  }
+}

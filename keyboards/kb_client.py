@@ -14,17 +14,11 @@
 #    ╚═╝   ╚══════╝╚═╝  ╚═╝╚═╝  ╚═══╝ ╚═════╝ ╚══════╝
 
 
-from aiogram.types import KeyboardButton, ReplyKeyboardMarkup
+import os
+from render_template import load_keyboards
 
-main_menu = ReplyKeyboardMarkup(
-    resize_keyboard=True,
-    keyboard=[
-        [KeyboardButton(text="🆔 Айди"), KeyboardButton(text="❗ Ркон")],
-        [KeyboardButton(text="🆘 Инфо"), KeyboardButton(text="⚙ Управление")],
-        [KeyboardButton(text="🆘 Поддержка")],
-    ],
-)
+json_file_path = os.path.join("template", "keyboards", "client.json")
+keyboards = load_keyboards(json_file_path)
 
-rcon_cancel = ReplyKeyboardMarkup(
-    resize_keyboard=True, keyboard=[[KeyboardButton(text="◀ Отмена")]]
-)
+main_menu = keyboards["main_menu"]
+rcon_cancel = keyboards["rcon_cancel"]

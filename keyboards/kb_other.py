@@ -14,12 +14,11 @@
 #    ╚═╝   ╚══════╝╚═╝  ╚═╝╚═╝  ╚═══╝ ╚═════╝ ╚══════╝
 
 
-from aiogram.types import KeyboardButton, ReplyKeyboardMarkup
+import os
 
-main_menu = ReplyKeyboardMarkup(
-    resize_keyboard=True,
-    keyboard=[
-        [KeyboardButton(text="🆔 Айди"), KeyboardButton(text="🆘 Инфо")],
-        [KeyboardButton(text="🆘 Поддержка")],
-    ],
-)
+from render_template import load_keyboards
+
+json_file_path = os.path.join("template", "keyboards", "other.json")
+keyboards = load_keyboards(json_file_path)
+
+main_menu = keyboards["main_menu"]

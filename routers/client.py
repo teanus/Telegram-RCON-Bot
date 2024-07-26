@@ -13,17 +13,22 @@
 #    ██║   ███████╗██║  ██║██║ ╚████║╚██████╔╝███████║
 #    ╚═╝   ╚══════╝╚═╝  ╚═╝╚═╝  ╚═══╝ ╚═════╝ ╚══════╝
 
+import os
+
 from aiogram import Router, types
 from aiogram.filters import StateFilter
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
-
+from render_template import load_valid_commands
 from custom_filters import TextInFilter
 from keyboards import get_main_menu, kb_client
 from logger.group_logger import groups_logger
 from logger.log import logger
 from minecraft import rcon
 from provider import db
+
+json_file_path = os.path.join("template", "commands", "client.json")
+valid_commands = load_valid_commands(json_file_path)
 
 
 class FsmClient(StatesGroup):
@@ -85,10 +90,10 @@ async def get_command(message: types.Message, state: FSMContext) -> None:
 
 
 async def register_routers() -> None:
-    client_router.message.register(rcon_cmd, TextInFilter(["/rcon", "❗ ркон"]))
+    client_router.message.register(rcon_cmd, TextInFilter(valid_commands["rcon"]))
     client_router.message.register(
         cancel_state_rcon,
-        TextInFilter(["◀ отмена", "back"]),
+        TextInFilter(valid_commands["cancel"]),
         StateFilter(FsmClient.rcon),
     )
     client_router.message.register(get_command, StateFilter(FsmClient.rcon))

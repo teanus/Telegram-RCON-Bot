@@ -13,53 +13,16 @@
 #    ██║   ███████╗██║  ██║██║ ╚████║╚██████╔╝███████║
 #    ╚═╝   ╚══════╝╚═╝  ╚═╝╚═╝  ╚═══╝ ╚═════╝ ╚══════╝
 
+import os
 
-from aiogram.types import KeyboardButton, ReplyKeyboardMarkup
+from render_template import load_keyboards
 
-main_menu = ReplyKeyboardMarkup(
-    resize_keyboard=True,
-    keyboard=[
-        [KeyboardButton(text="🆔 Айди"), KeyboardButton(text="❗ Ркон")],
-        [KeyboardButton(text="🆘 Инфо"), KeyboardButton(text="⚙ Управление")],
-        [KeyboardButton(text="🆘 Поддержка")],
-    ],
-)
+json_file_path = os.path.join("template", "keyboards", "admin.json")
+keyboards = load_keyboards(json_file_path)
 
-admin_panel_menu = ReplyKeyboardMarkup(
-    resize_keyboard=True,
-    keyboard=[
-        [KeyboardButton(text="📝 Роли"), KeyboardButton(text="📝 Команды")],
-        [KeyboardButton(text="◀ Отмена")],
-    ],
-)
-
-roles_panel = ReplyKeyboardMarkup(
-    resize_keyboard=True,
-    keyboard=[
-        [KeyboardButton(text="📝 Выдать"), KeyboardButton(text="📝 Снять")],
-        [KeyboardButton(text="⏹ Назад")],
-    ],
-)
-
-roles_switch_panel = ReplyKeyboardMarkup(
-    resize_keyboard=True,
-    keyboard=[
-        [KeyboardButton(text="🪪 Админ"), KeyboardButton(text="🪪 Обычный")],
-        [KeyboardButton(text="⏹ Назад")],
-    ],
-)
-
-panel_commands_switch = ReplyKeyboardMarkup(
-    resize_keyboard=True,
-    keyboard=[
-        [
-            KeyboardButton(text="⛔ Добавить"),
-            KeyboardButton(text="🗑 Удалить"),
-        ],
-        [KeyboardButton(text="⏹ Назад")],
-    ],
-)
-
-admin_back = ReplyKeyboardMarkup(
-    resize_keyboard=True, keyboard=[[KeyboardButton(text="⏹ Назад")]]
-)
+main_menu = keyboards["main_menu"]
+admin_panel_menu = keyboards["admin_panel_menu"]
+roles_panel = keyboards["roles_panel"]
+roles_switch_panel = keyboards["roles_switch_panel"]
+panel_commands_switch = keyboards["panel_commands_switch"]
+admin_back = keyboards["admin_back"]

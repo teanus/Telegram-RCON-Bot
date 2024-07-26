@@ -13,13 +13,17 @@
 #    ██║   ███████╗██║  ██║██║ ╚████║╚██████╔╝███████║
 #    ╚═╝   ╚══════╝╚═╝  ╚═╝╚═╝  ╚═══╝ ╚═════╝ ╚══════╝
 
+import os
 
 from aiogram import F, Router, types
-from aiogram.filters import Command
 
 from custom_filters import TextInFilter
+from render_template import load_valid_commands
 
 other_router = Router()
+
+json_file_path = os.path.join("template", "commands", "other.json")
+valid_commands = load_valid_commands(json_file_path)
 
 
 async def id_cmd(message: types.Message) -> None:
@@ -38,8 +42,8 @@ async def support_cmd(message: types.Message) -> None:
 
 
 async def register_routers() -> None:
-    other_router.message.register(id_cmd, TextInFilter(["/id", "🆔 айди"]))
-    other_router.message.register(info_cmd, TextInFilter(["/info", "🆘 инфо"]))
+    other_router.message.register(id_cmd, TextInFilter(valid_commands["id"]))
+    other_router.message.register(info_cmd, TextInFilter(valid_commands["info"]))
     other_router.message.register(
-        support_cmd, TextInFilter(["/support", "🆘 поддержка"])
+        support_cmd, TextInFilter(valid_commands["support"])
     )

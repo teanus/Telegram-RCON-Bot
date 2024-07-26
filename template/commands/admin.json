@@ -1,0 +1,39 @@
+{
+  "valid_commands": {
+    "settings": [
+      "⚙ Управление"
+    ],
+    "cancel": [
+      "◀ отмена",
+      "cancel"
+    ],
+    "back": [
+      "⏹ назад",
+      "back"
+    ],
+    "role": [
+      "\uD83D\uDCDD Роли"
+    ],
+    "commands": [
+      "\uD83D\uDCDD команды"
+    ],
+    "give_role": [
+      "\uD83D\uDCDD выдать"
+    ],
+    "remove_role": [
+      "\uD83D\uDCDD снять"
+    ],
+    "add_command": [
+      "⛔\uFE0F Добавить"
+    ],
+    "remove_command": [
+      "\uD83D\uDDD1 Удалить"
+    ],
+    "role_admin": [
+      "\uD83E\uDEAA Админ"
+    ],
+    "role_normal": [
+      "\uD83E\uDEAA Обычный"
+    ]
+  }
+}

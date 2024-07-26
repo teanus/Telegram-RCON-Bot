@@ -1,0 +1,25 @@
+{
+  "main_menu": {
+    "resize_keyboard": true,
+    "keyboard": [
+      [
+        "🆔 Айди",
+        "❗ Ркон"
+      ],
+      [
+        "🆘 Инфо"
+      ],
+      [
+        "🆘 Поддержка"
+      ]
+    ]
+  },
+  "rcon_cancel": {
+    "resize_keyboard": true,
+    "keyboard": [
+      [
+        "◀ Отмена"
+      ]
+    ]
+  }
+}

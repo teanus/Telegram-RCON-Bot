@@ -1,0 +1,74 @@
+{
+  "main_menu": {
+    "resize_keyboard": true,
+    "keyboard": [
+      [
+        "🆔 Айди",
+        "❗ Ркон"
+      ],
+      [
+        "🆘 Инфо",
+        "⚙ Управление"
+      ],
+      [
+        "🆘 Поддержка"
+      ]
+    ]
+  },
+  "admin_panel_menu": {
+    "resize_keyboard": true,
+    "keyboard": [
+      [
+        "📝 Роли",
+        "📝 Команды"
+      ],
+      [
+        "◀ Отмена"
+      ]
+    ]
+  },
+  "roles_panel": {
+    "resize_keyboard": true,
+    "keyboard": [
+      [
+        "📝 Выдать",
+        "📝 Снять"
+      ],
+      [
+        "⏹ Назад"
+      ]
+    ]
+  },
+  "roles_switch_panel": {
+    "resize_keyboard": true,
+    "keyboard": [
+      [
+        "🪪 Админ",
+        "🪪 Обычный"
+      ],
+      [
+        "⏹ Назад"
+      ]
+    ]
+  },
+  "panel_commands_switch": {
+    "resize_keyboard": true,
+    "keyboard": [
+      [
+        "⛔ Добавить",
+        "🗑 Удалить"
+      ],
+      [
+        "⏹ Назад"
+      ]
+    ]
+  },
+  "admin_back": {
+    "resize_keyboard": true,
+    "keyboard": [
+      [
+        "⏹ Назад"
+      ]
+    ]
+  }
+}
