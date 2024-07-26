@@ -15,10 +15,10 @@
 
 
 from os import getenv
+from typing import List, Union
 
 from dotenv import load_dotenv
 from mcrcon import MCRcon
-from typing import List, Union
 
 load_dotenv()
 
