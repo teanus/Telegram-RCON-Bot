@@ -65,7 +65,7 @@ async def cancel_settings(message: types.Message, state: FSMContext) -> None:
 
 
 async def back_to_state(
-        message: types.Message, state: FSMContext, state_to_set: State
+    message: types.Message, state: FSMContext, state_to_set: State
 ) -> None:
     await message.answer(
         "Возвращаемся назад!", reply_markup=kb_admin.roles_switch_panel
@@ -87,11 +87,11 @@ async def back_to_state_settings(message: types.Message, state: FSMContext) -> N
 
 
 async def back_to_state_on_markup(
-        message: types.Message,
-        state: FSMContext,
-        reply_text: str,
-        markup,
-        state_to_set: State,
+    message: types.Message,
+    state: FSMContext,
+    reply_text: str,
+    markup,
+    state_to_set: State,
 ) -> None:
     await message.answer(reply_text, reply_markup=markup)
     await state.set_state(state_to_set)
@@ -108,7 +108,7 @@ async def back_state_commands_switch(message: types.Message, state: FSMContext) 
 
 
 async def back_state_remove_roles_switcher(
-        message: types.Message, state: FSMContext
+    message: types.Message, state: FSMContext
 ) -> None:
     await back_to_state_on_markup(
         message,
@@ -296,9 +296,13 @@ async def command_remove(message: types.Message) -> None:
 
 
 async def register_routers() -> None:
-    admin_router.message.register(settings_panel, TextInFilter(valid_commands["settings"]))
     admin_router.message.register(
-        cancel_settings, TextInFilter(valid_commands["cancel"]), StateFilter(AdminState.settings)
+        settings_panel, TextInFilter(valid_commands["settings"])
+    )
+    admin_router.message.register(
+        cancel_settings,
+        TextInFilter(valid_commands["cancel"]),
+        StateFilter(AdminState.settings),
     )
 
 
@@ -306,11 +310,15 @@ admin_router.message.register(
     roles_switch, TextInFilter(valid_commands["role"]), StateFilter(AdminState.settings)
 )
 admin_router.message.register(
-    commands_settings, TextInFilter(valid_commands["commands"]), StateFilter(AdminState.settings)
+    commands_settings,
+    TextInFilter(valid_commands["commands"]),
+    StateFilter(AdminState.settings),
 )
 
 admin_router.message.register(
-    back_to_state_settings, TextInFilter(valid_commands["back"]), StateFilter(AdminState.commands)
+    back_to_state_settings,
+    TextInFilter(valid_commands["back"]),
+    StateFilter(AdminState.commands),
 )
 admin_router.message.register(
     back_state_add,
@@ -339,29 +347,43 @@ admin_router.message.register(
 )
 
 admin_router.message.register(
-    give_roles, TextInFilter(valid_commands["give_role"]), StateFilter(AdminState.roles_switch)
+    give_roles,
+    TextInFilter(valid_commands["give_role"]),
+    StateFilter(AdminState.roles_switch),
 )
 admin_router.message.register(
-    remove_role, TextInFilter(valid_commands["remove_role"]), StateFilter(AdminState.roles_switch)
+    remove_role,
+    TextInFilter(valid_commands["remove_role"]),
+    StateFilter(AdminState.roles_switch),
 )
 admin_router.message.register(
-    roles_add_user, TextInFilter(valid_commands["role_normal"]), StateFilter(AdminState.give)
+    roles_add_user,
+    TextInFilter(valid_commands["role_normal"]),
+    StateFilter(AdminState.give),
 )
 admin_router.message.register(
-    roles_add_admin, TextInFilter(valid_commands["role_admin"]), StateFilter(AdminState.give)
+    roles_add_admin,
+    TextInFilter(valid_commands["role_admin"]),
+    StateFilter(AdminState.give),
 )
 admin_router.message.register(
-    remove_role_user, TextInFilter(valid_commands["role_normal"]), StateFilter(AdminState.remove)
+    remove_role_user,
+    TextInFilter(valid_commands["role_normal"]),
+    StateFilter(AdminState.remove),
 )
 admin_router.message.register(
-    remove_role_admin, TextInFilter(valid_commands["role_admin"]), StateFilter(AdminState.remove)
+    remove_role_admin,
+    TextInFilter(valid_commands["role_admin"]),
+    StateFilter(AdminState.remove),
 )
 
 admin_router.message.register(get_remove_user_id, StateFilter(AdminState.remove_user))
 admin_router.message.register(get_remove_admin_id, StateFilter(AdminState.remove_admin))
 
 admin_router.message.register(
-    button_commands_add, TextInFilter(valid_commands["add_command"]), StateFilter(AdminState.commands)
+    button_commands_add,
+    TextInFilter(valid_commands["add_command"]),
+    StateFilter(AdminState.commands),
 )
 admin_router.message.register(
     button_commands_remove,

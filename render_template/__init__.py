@@ -1,2 +1,1 @@
-from render_template.render import load_keyboards
-from render_template.render import load_valid_commands
+from render_template.render import load_keyboards, load_valid_commands

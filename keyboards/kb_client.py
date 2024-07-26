@@ -15,6 +15,7 @@
 
 
 import os
+
 from render_template import load_keyboards
 
 json_file_path = os.path.join("template", "keyboards", "client.json")

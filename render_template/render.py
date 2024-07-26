@@ -16,6 +16,7 @@ from typing import Dict, List
 
 from aiogram.types import KeyboardButton, ReplyKeyboardMarkup
 
+
 def load_keyboards(file_path: str) -> Dict[str, ReplyKeyboardMarkup]:
     """
     Загружает клавиатуры из JSON-файла и создает словарь объектов ReplyKeyboardMarkup.
@@ -34,10 +35,10 @@ def load_keyboards(file_path: str) -> Dict[str, ReplyKeyboardMarkup]:
                 for row in params["keyboard"]
             ]
             keyboards_dict[name] = ReplyKeyboardMarkup(
-                resize_keyboard=params.get("resize_keyboard", True), keyboard=keyboard_buttons
+                resize_keyboard=params.get("resize_keyboard", True),
+                keyboard=keyboard_buttons,
             )
     return keyboards_dict
-
 
 
 def load_valid_commands(json_file_path: str) -> Dict[str, List[str]]:
@@ -49,6 +50,6 @@ def load_valid_commands(json_file_path: str) -> Dict[str, List[str]]:
     :return:
         Словарь с допустимыми командами, где ключи - это состояния, а значения - списки команд.
     """
-    with open(json_file_path, 'r', encoding='utf-8') as file:
+    with open(json_file_path, "r", encoding="utf-8") as file:
         data = json.load(file)
         return data["valid_commands"]

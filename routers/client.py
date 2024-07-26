@@ -19,13 +19,14 @@ from aiogram import Router, types
 from aiogram.filters import StateFilter
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
-from render_template import load_valid_commands
+
 from custom_filters import TextInFilter
 from keyboards import get_main_menu, kb_client
 from logger.group_logger import groups_logger
 from logger.log import logger
 from minecraft import rcon
 from provider import db
+from render_template import load_valid_commands
 
 json_file_path = os.path.join("template", "commands", "client.json")
 valid_commands = load_valid_commands(json_file_path)

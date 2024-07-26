@@ -44,6 +44,4 @@ async def support_cmd(message: types.Message) -> None:
 async def register_routers() -> None:
     other_router.message.register(id_cmd, TextInFilter(valid_commands["id"]))
     other_router.message.register(info_cmd, TextInFilter(valid_commands["info"]))
-    other_router.message.register(
-        support_cmd, TextInFilter(valid_commands["support"])
-    )
+    other_router.message.register(support_cmd, TextInFilter(valid_commands["support"]))
