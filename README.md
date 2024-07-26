@@ -1,7 +1,8 @@
 
-# TeaRCON 3.0
+# TeaRCON 3.2
 
 Telegram RCON bot для игры Minecraft Bedrock и Java edition
+
 
 
 
@@ -14,7 +15,43 @@ Telegram RCON bot для игры Minecraft Bedrock и Java edition
   pip install -r requirements.txt
 
 ```
-    
+
+## Настройка
+
+Создайте файл без имени с расширением .env, как показано на фото:
+
+![File env](https://imgur.com/iO9Fuql.png)
+
+Заполните его поля данными:
+
+    TOKEN= Токен вашего бота телеграмм полученный от BotFather
+    rcon_host= ip_address вашего сервера, если бот установлен с сервером на одном сервере, то 127.0.0.1
+    rcon_port = Порт вашего rcon, можно узнать в файле server.properties
+    rcon_password = Пароль от вашего rcon, можно узнать в файле server.properties
+
+## Выдача прав администратора
+📢ВАЖНО! В config.yaml должен стоять True в поле: 
+
+    console:
+      give_role: True
+      
+Для первой выдачи прав администратора нужно получить user id, перезапустить бота и в консоли при запросе ввести или вставить id: <br>
+
+![Give admin](https://imgur.com/KzT05IN.png)
+
+В дальнейшем администратор может напрямую добавлять других пользователей, напрямую через админ-панель бота
+
+##  Использование PostgreSQL
+
+Если вы используете бд PostgreSQL, то вам нужно дополнительно дозаполнить файл env
+
+    postgre_host= ip_address где расположена бд
+    postgre_port= port вашего postgresql
+    postgre_username= Пользователь вашей бд обладающей правами доступа
+    postgre_password= Пароль от вашего пользователя
+
+Название бд настраивается в config.yaml
+
 ## Запуск
 
 Запуск рекомендуется делать при использовании мультиплексора tmux или его аналогов
@@ -27,7 +64,7 @@ Telegram RCON bot для игры Minecraft Bedrock и Java edition
 Команды запуска
 
 ```bash
-  tmux new -s teabot 
+  tmux new -s tearcon 
   python3 bot.py 
 ```
 
@@ -46,13 +83,16 @@ Telegram RCON bot для игры Minecraft Bedrock и Java edition
   
     - Логирование имеет ограничение на размер файла (по умолчанию 5мбайт)
     - Логирование имеет автоматические бэкап файлы (по умолчанию 2)
-  
+
+
 ## Планы на будущее
 
 - [ ] Сделать возможность кастомизации сообщений вне кода
 
 - [ ] Написать свой ассинхронный интерфейс RCON
-
+      
+✅ Кастомизация команд и клавиатуры
+<br>
 ✅ Полноценное логирование
 <br>
 ❌ Перестать лениться :)
