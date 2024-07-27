@@ -16,36 +16,35 @@
 
 from pathlib import Path
 from typing import Any, Dict
+import json
 
-import yaml
-
-path: Path = Path(__file__).resolve().parents[1] / "config.yaml"
+path: Path = Path(__file__).resolve().parents[1] / "config.json"
 
 
-def read_yaml() -> Dict[str, Any]:
+def read_json() -> Dict[str, Any]:
     with open(path, "r") as file:
-        return yaml.safe_load(file)
+        return json.load(file)
 
 
 def telegram() -> Dict[str, Any]:
-    return read_yaml()["Telegram"]
+    return read_json()["Telegram"]
 
 
 def database() -> Dict[str, Any]:
-    return read_yaml()["database"]
+    return read_json()["database"]
 
 
 def sqlite() -> Dict[str, Any]:
-    return read_yaml()["sqlite"]
+    return read_json()["sqlite"]
 
 
 def postgresql() -> Dict[str, Any]:
-    return read_yaml()["postgresql"]
+    return read_json()["postgresql"]
 
 
 def console() -> Dict[str, Any]:
-    return read_yaml()["console"]
+    return read_json()["console"]
 
 
 def logging_config() -> Dict[str, Any]:
-    return read_yaml()["logging"]
+    return read_json()["logging"]
