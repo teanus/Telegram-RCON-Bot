@@ -130,7 +130,7 @@ class PostgresqlDatabase:
             self.con = await asyncpg.connect(
                 user=getenv("postgre_username"),
                 password=getenv("postgre_password"),
-                database=config.postgresql()["name"],
+                database=getenv("postgre_database_name"),
                 host=getenv("postgre_host"),
                 port=getenv("postgre_port"),
             )
