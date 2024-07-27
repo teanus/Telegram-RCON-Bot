@@ -30,10 +30,12 @@ Telegram RCON bot для игры Minecraft Bedrock и Java edition
     rcon_password = Пароль от вашего rcon, можно узнать в файле server.properties
 
 ## Выдача прав администратора
-📢ВАЖНО! В config.yaml должен стоять True в поле: 
 
-    console:
-      give_role: True
+📢ВАЖНО! В config.json должен стоять True в поле: 
+
+    "console": {
+         "give_role": true
+    }
       
 Для первой выдачи прав администратора нужно получить user id, перезапустить бота и в консоли при запросе ввести или вставить id: <br>
 
@@ -47,10 +49,10 @@ Telegram RCON bot для игры Minecraft Bedrock и Java edition
 
     postgre_host= ip_address где расположена бд
     postgre_port= port вашего postgresql
+    postgre_database_name= Название бд выделенной под бота
     postgre_username= Пользователь вашей бд обладающей правами доступа
     postgre_password= Пароль от вашего пользователя
 
-Название бд настраивается в config.yaml
 
 ## Запуск
 
