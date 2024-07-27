@@ -10,7 +10,7 @@
     "name": "sqlite_db.db"
   },
   "console": {
-    "give_role": false
+    "give_role": true
   },
   "logging": {
     "file_name": "info",
