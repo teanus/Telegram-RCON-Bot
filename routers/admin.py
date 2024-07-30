@@ -322,11 +322,16 @@ admin_router.message.register(
     TextInFilter(valid_commands["back"]),
     StateFilter(AdminState.commands),
 )
+
 admin_router.message.register(
     back_state_add,
     TextInFilter(["⏹ назад"]),
     StateFilter(AdminState.add_user, AdminState.add_admin),
 )
+
+admin_router.message.register(get_add_user_id, StateFilter(AdminState.add_user))
+admin_router.message.register(get_add_admin_id, StateFilter(AdminState.add_admin))
+
 admin_router.message.register(
     back_state_remove_roles_switcher,
     TextInFilter(valid_commands["back"]),
