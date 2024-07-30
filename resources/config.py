@@ -14,9 +14,9 @@
 #    ╚═╝   ╚══════╝╚═╝  ╚═╝╚═╝  ╚═══╝ ╚═════╝ ╚══════╝
 
 
+import json
 from pathlib import Path
 from typing import Any, Dict
-import json
 
 path: Path = Path(__file__).resolve().parents[1] / "config.json"
 

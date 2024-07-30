@@ -26,6 +26,7 @@ from logger.group_logger import groups_logger
 from logger.log import logger
 from provider import db
 from render_template import load_valid_commands
+from tools import get_commands_table_formatted
 
 json_file_path = os.path.join("template", "commands", "admin.json")
 valid_commands = load_valid_commands(json_file_path)
@@ -225,9 +226,10 @@ async def get_remove_admin_id(message: types.Message) -> None:
 
 
 async def commands_settings(message: types.Message, state: FSMContext) -> None:
-    await message.answer(
-        f"Список заблокированных команд на данный момент:\n{await db.commands_all()}"
-    )
+    commands = await db.commands_all()
+    table = await get_commands_table_formatted(commands)
+    await message.answer("Список заблокированных команд на данный момент: ")
+    await message.answer(f"```commands_list {table}```", parse_mode="Markdown")
     await message.answer(
         "Выберите, что нужно сделать. Добавить или удалить команды из списка. Либо вернитесь назад",
         reply_markup=kb_admin.panel_commands_switch,

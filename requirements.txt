@@ -3,3 +3,4 @@ aiosqlite==0.20.0
 asyncpg==0.29.0
 python-dotenv==1.0.1
 mcrcon~=0.7.0
+prettytable~=3.10.2
