@@ -179,7 +179,9 @@ async def get_add_user_id(message: types.Message) -> None:
     chat_id = message.chat.id
     text_id = message.text
     if not text_id.isdigit():
-        await message.reply("Это не является ID, id должен содержать ТОЛЬКО цифры и ничего другого. Пример: 78715102429")
+        await message.reply(
+            "Это не является ID, id должен содержать ТОЛЬКО цифры и ничего другого. Пример: 78715102429"
+        )
     elif await db.user_exists(text_id):
         await message.answer(
             "Пользователь с таким id уже есть в списке. Введите другой id или нажмите 'назад'"
