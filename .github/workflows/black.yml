@@ -12,10 +12,10 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up Python
-        uses: actions/setup-python@v3
+        uses: actions/setup-python@v4
         with:
           python-version: "3.10"
 
@@ -29,11 +29,18 @@ jobs:
         id: git-check
         run: |
           git diff --exit-code || echo "Форматирование успешно выполнено"
-          echo echo "changes=$(if [ $? -eq 0 ]; then echo "false"; else echo "true"; fi)" >> $GITHUB_ENV
+          if [ $? -eq 0 ]; then
+            echo "changes=false" >> $GITHUB_ENV
+          else
+            echo "changes=true" >> $GITHUB_ENV
+          fi
 
+      - name: Show git diff
+        if: env.changes == 'true'
+        run: git diff
 
       - name: Commit changes
-        if: steps.git-check.outputs.changes == 'true'
+        if: env.changes == 'true'
         run: |
           git config --local user.email "teanus.ti@gmail.com"
           git config --local user.name "teanus"
