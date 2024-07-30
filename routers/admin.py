@@ -177,19 +177,25 @@ async def roles_add_admin(message: types.Message, state: FSMContext) -> None:
 
 async def get_add_user_id(message: types.Message) -> None:
     chat_id = message.chat.id
-    if await db.user_exists(message.text):
+    text_id = message.text
+    if not text_id.isdigit():
+        await message.reply("Это не является ID, id должен содержать ТОЛЬКО цифры и ничего другого. Пример: 78715102429")
+    elif await db.user_exists(text_id):
         await message.answer(
             "Пользователь с таким id уже есть в списке. Введите другой id или нажмите 'назад'"
         )
     else:
         await groups_logger("Выдача роли обычного игрока: ", chat_id, message.text)
-        await db.add_user(message.text)
+        await db.add_user(text_id)
         await message.answer(f"Роль 'обычная' выдана пользователю с id {message.text}")
 
 
 async def get_add_admin_id(message: types.Message) -> None:
     chat_id = message.chat.id
-    if await db.check_admin_user(message.text):
+    text_id = message.text
+    if not text_id.isdigit():
+        await message.reply("Это не является ID, id должен содержать ТОЛЬКО цифры и ничего другого. Пример: 78715102429")
+    elif await db.check_admin_user(message.text):
         await message.answer(
             "Этот id уже имеет роль администратора. Введите другой id или нажмите 'назад'"
         )
