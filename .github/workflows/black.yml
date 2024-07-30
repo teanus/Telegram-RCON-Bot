@@ -12,12 +12,12 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up Python
-        uses: actions/setup-python@v3
+        uses: actions/setup-python@v4
         with:
-          python-version: "3.10"
+          python-version: "3.11"
 
       - name: Install Black
         run: pip install black
@@ -29,11 +29,14 @@ jobs:
         id: git-check
         run: |
           git diff --exit-code || echo "Форматирование успешно выполнено"
-          echo echo "changes=$(if [ $? -eq 0 ]; then echo "false"; else echo "true"; fi)" >> $GITHUB_ENV
+          echo "changes=$(git diff --exit-code || echo 'true')" >> $GITHUB_ENV
 
+      - name: Show git diff
+        if: env.changes == 'true'
+        run: git diff
 
       - name: Commit changes
-        if: steps.git-check.outputs.changes == 'true'
+        if: env.changes == 'true'
         run: |
           git config --local user.email "teanus.ti@gmail.com"
           git config --local user.name "teanus"
