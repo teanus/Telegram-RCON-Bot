@@ -44,20 +44,26 @@ class SqliteDatabase:
         table_users = """
             CREATE TABLE IF NOT EXISTS users(
                 id INTEGER PRIMARY KEY, 
-                telegram_id TEXT, 
-                role TEXT DEFAULT 'normal'
+                telegram_id TEXT
             )
         """
         table_black_list = "CREATE TABLE IF NOT EXISTS black_list(command TEXT)"
+        table_admins = """
+            CREATE TABLE IF NOT EXISTS admins(
+                id INTEGER PRIMARY KEY,
+                telegram_id TEXT
+            )
+        """
         await self.execute_query(table_users)
         await self.execute_query(table_black_list)
+        await self.execute_query(table_admins)
         await self.con.commit()
 
     async def execute_query(self, query: str, params=None) -> bool:
         try:
             if not self.con:
                 await self.connect()
-            async with self.con.execute(query, params or ()) as cursor:
+            async with self.con.execute(query, params or ()):
                 pass
             await self.con.commit()
             return True
@@ -77,8 +83,8 @@ class SqliteDatabase:
             return []
 
     async def add_user(self, user_id: str) -> bool:
-        query = "INSERT INTO users(telegram_id, role) VALUES(?, ?)"
-        return await self.execute_query(query, [user_id, "normal"])
+        query = "INSERT INTO users(telegram_id) VALUES(?)"
+        return await self.execute_query(query, (user_id,))
 
     async def user_exists(self, user_id: str) -> bool:
         query = "SELECT 1 FROM users WHERE telegram_id = ?"
@@ -90,16 +96,16 @@ class SqliteDatabase:
         return await self.execute_query(query, (user_id,))
 
     async def add_admin(self, user_id: str) -> bool:
-        query = "INSERT INTO users(telegram_id, role) VALUES(?, ?)"
-        return await self.execute_query(query, [user_id, "admin"])
+        query = "INSERT INTO admins(telegram_id) VALUES(?)"
+        return await self.execute_query(query, (user_id,))
 
     async def check_admin_user(self, user_id: str) -> bool:
-        query = "SELECT 1 FROM users WHERE telegram_id = ? AND role = ?"
-        result = await self.fetch_all(query, (user_id, "admin"))
+        query = "SELECT 1 FROM admins WHERE telegram_id = ?"
+        result = await self.fetch_all(query, (user_id,))
         return bool(result)
 
     async def admin_remove(self, user_id: str) -> bool:
-        query = "DELETE FROM users WHERE telegram_id = ?"
+        query = "DELETE FROM admins WHERE telegram_id = ?"
         return await self.execute_query(query, (user_id,))
 
     async def add_black_list(self, cmd: str) -> bool:
@@ -148,12 +154,18 @@ class PostgresqlDatabase:
             CREATE TABLE IF NOT EXISTS users(
                 id SERIAL PRIMARY KEY, 
                 telegram_id TEXT, 
-                role TEXT DEFAULT 'normal'
             )
         """
         table_black_list = "CREATE TABLE IF NOT EXISTS black_list(command TEXT)"
+        table_admins = """
+            CREATE TABLE IF NOT EXISTS admins(
+                id SERIAL PRIMARY KEY,
+                telegram_id TEXT
+            )
+        """
         await self.execute_query(table_users)
         await self.execute_query(table_black_list)
+        await self.execute_query(table_admins)
         await self.con.commit()
 
     async def execute_query(self, query: str, params=None) -> bool:
@@ -178,8 +190,8 @@ class PostgresqlDatabase:
             return []
 
     async def add_user(self, user_id: str) -> bool:
-        query = "INSERT INTO users(telegram_id, role) VALUES($1, $2)"
-        return await self.execute_query(query, [user_id, "normal"])
+        query = "INSERT INTO users(telegram_id) VALUES($1)"
+        return await self.execute_query(query, [user_id])
 
     async def user_exists(self, user_id: str) -> bool:
         query = "SELECT EXISTS(SELECT 1 FROM users WHERE telegram_id = $1)"
@@ -191,18 +203,16 @@ class PostgresqlDatabase:
         return await self.execute_query(query, [user_id])
 
     async def add_admin(self, user_id: str) -> bool:
-        query = "INSERT INTO users(telegram_id, role) VALUES($1, $2)"
-        return await self.execute_query(query, [user_id, "admin"])
+        query = "INSERT INTO admins(telegram_id) VALUES($1)"
+        return await self.execute_query(query, [user_id])
 
     async def check_admin_user(self, user_id: str) -> bool:
-        query = (
-            "SELECT EXISTS(SELECT 1 FROM users WHERE telegram_id = $1 AND role = $2)"
-        )
-        result = await self.fetch_all(query, [user_id, "admin"])
+        query = "SELECT EXISTS(SELECT 1 FROM admins WHERE telegram_id = $1)"
+        result = await self.fetch_all(query, [user_id])
         return result[0]["exists"]
 
     async def admin_remove(self, user_id: str) -> bool:
-        query = "DELETE FROM users WHERE telegram_id = $1"
+        query = "DELETE FROM admins WHERE telegram_id = $1"
         return await self.execute_query(query, [user_id])
 
     async def add_black_list(self, cmd: str) -> bool:
@@ -256,21 +266,6 @@ class DataBase:
 
     async def check_admin_user(self, user_id: str) -> bool:
         return await self.database.check_admin_user(user_id)
-
-    async def admin_remove(self, user_id: str) -> bool:
-        return await self.database.admin_remove(user_id)
-
-    async def add_black_list(self, cmd: str) -> bool:
-        return await self.database.add_black_list(cmd)
-
-    async def command_exists(self, cmd: str) -> bool:
-        return await self.database.command_exists(cmd)
-
-    async def remove_black_list(self, cmd: str) -> bool:
-        return await self.database.remove_black_list(cmd)
-
-    async def commands_all(self) -> str:
-        return await self.database.commands_all()
 
 
 db = DataBase(db_type=config.database()["type"])
