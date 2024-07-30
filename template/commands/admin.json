@@ -12,28 +12,28 @@
       "back"
     ],
     "role": [
-      "\uD83D\uDCDD Роли"
+      "📝 Роли"
     ],
     "commands": [
-      "\uD83D\uDCDD команды"
+      "📝 Команды"
     ],
     "give_role": [
-      "\uD83D\uDCDD выдать"
+      "📝 Выдать"
     ],
     "remove_role": [
-      "\uD83D\uDCDD снять"
+      "📝 Снять"
     ],
     "add_command": [
-      "⛔\uFE0F Добавить"
+      "⛔ Добавить"
     ],
     "remove_command": [
-      "\uD83D\uDDD1 Удалить"
+      "🗑 Удалить"
     ],
     "role_admin": [
-      "\uD83E\uDEAA Админ"
+      "🪪 Админ"
     ],
     "role_normal": [
-      "\uD83E\uDEAA Обычный"
+      "🪪 Обычный"
     ]
   }
 }
