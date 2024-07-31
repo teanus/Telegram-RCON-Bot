@@ -23,7 +23,6 @@ from provider import db
 common_router = Router()
 
 
-@common_router.message()
 async def start(message: Message) -> None:
     chat_id = message.chat.id
     menu = await get_main_menu(chat_id)
