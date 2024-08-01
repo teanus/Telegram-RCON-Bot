@@ -61,4 +61,4 @@ def command_execute(command: str) -> Union[str, List[str]]:
             response = mcr.command(command)
             return replace_color_tag(response)
     except ConnectionError:
-        return f"Произошла ошибка RCON. Повторите попытку"
+        return f"An RCON error has occurred. Please try again"

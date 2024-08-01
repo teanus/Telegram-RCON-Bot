@@ -27,5 +27,5 @@ async def groups_logger(prefix: str, user_id: int, message: str) -> None:
         log_message = f"{prefix} {user_type} с ID {user_id} - ввел команду: {message}"
         try:
             await bot.send_message(config.telegram().get("logger_chat_id"), log_message)
-        except TelegramAPIError as e:
-            print(f"Не удалось отправить сообщение журнала: {e}")
+        except TelegramAPIError as error:
+            print(f"The log message could not be sent: {error}")
