@@ -1,0 +1,8 @@
+{# logger.jinja2 #}
+
+{%- set role = "Администратор" if is_admin else "Пользователь" -%}
+{%- if blocked_command %}
+    Пользователь с id {{ user_id }} попытался выполнить заблокированную команду: {{ command }}.
+{%- else -%}
+    {{ role }} с id {{ user_id }} выполнил команду: {{ command }}.
+{%- endif -%}

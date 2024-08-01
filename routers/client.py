@@ -26,7 +26,7 @@ from logger.group_logger import groups_logger
 from logger.log import logger
 from minecraft import rcon
 from provider import db
-from render_template import load_valid_commands
+from render_template import load_valid_commands, render_template_jinja
 
 json_file_path = os.path.join("template", "commands", "client.json")
 valid_commands = load_valid_commands(json_file_path)
@@ -43,25 +43,26 @@ async def rcon_cmd(message: types.Message, state: FSMContext) -> None:
     chat_id = message.chat.id
     user_id = message.from_user.id
     is_admin = await db.check_admin_user(chat_id)
+    context = {"user_id": user_id, "is_admin": is_admin}
+
     if is_admin or await db.user_exists(chat_id):
-        role = "администратора" if is_admin else '"normal"'
-        logger.info(
-            f"Пользователь с id {user_id} вошел в rcon консоль с правами {role}"
+        logger.info(render_template_jinja("client/rcon_cmd/logger.jinja2", **context))
+        await message.reply(
+            render_template_jinja("client/rcon_cmd/reply.jinja2"),
+            reply_markup=kb_client.rcon_cancel,
         )
-        await message.reply("Теперь пришли команду", reply_markup=kb_client.rcon_cancel)
         await state.set_state(FsmClient.rcon)
     else:
-        await message.reply("У вас нет доступа к данной команде. Приобретите доступ.")
+        await message.reply(render_template_jinja("client/rcon_cmd/no_access.jinja2"))
 
 
 async def cancel_state_rcon(message: types.Message, state: FSMContext) -> None:
     chat_id = message.chat.id
     main_menu = await get_main_menu(chat_id)
-    text = (
-        "Ты вышел из консоли. Прикажи что исполнять!"
-        if await db.check_admin_user(chat_id)
-        else "Ты вышел из консоли. Каковы будут дальнейшие действия?"
-    )
+    is_admin = await db.check_admin_user(chat_id)
+    context = {"is_admin": is_admin}
+
+    text = render_template_jinja("client/cancel_state_rcon/messages.jinja2", **context)
     await message.reply(text, reply_markup=main_menu)
     await state.clear()
 
@@ -71,21 +72,34 @@ async def get_command(message: types.Message, state: FSMContext) -> None:
     user_id = message.from_user.id
     low = message.text.lower()
     command = low.split(" ", 1)
+    is_admin = await db.check_admin_user(chat_id)
+    context = {
+        "user_id": user_id,
+        "command": low,
+        "is_admin": is_admin,
+        "blocked_command": not is_admin and await db.command_exists(command[0]),
+    }
 
-    if not await db.check_admin_user(chat_id) and await db.command_exists(command[0]):
+    if context["blocked_command"]:
         logger.info(
-            f"Пользователь с id {user_id} попытался выполнить заблокированную команду"
+            render_template_jinja("client/get_command/logger.jinja2", **context)
         )
         await groups_logger("RCON: ", user_id, message.text)
-        await message.reply("Команда заблокирована! Используйте другую:)")
+        await message.reply(
+            render_template_jinja("client/get_command/messages.jinja2", **context)
+        )
     else:
         result = rcon.command_execute(low)
-        role = "Администратор" if await db.check_admin_user(chat_id) else "Пользователь"
-        logger.info(f"{role} с id {user_id} выполнил команду: {low}")
+        context.update({"result": result})
+        logger.info(
+            render_template_jinja("client/get_command/logger.jinja2", **context)
+        )
         await groups_logger("RCON: ", user_id, message.text)
-        await message.reply(f"Команда выполнена. Ответ сервера:\n{result}")
+        await message.reply(
+            render_template_jinja("client/get_command/messages.jinja2", **context)
+        )
         await message.answer(
-            "Вы можете продолжить выполнять команды. Просто пришлите мне их. Или введите отмена"
+            render_template_jinja("client/get_command/continue.jinja2")
         )
         await state.set_state(FsmClient.rcon)
 

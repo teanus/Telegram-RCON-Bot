@@ -15,6 +15,9 @@ import json
 from typing import Dict, List
 
 from aiogram.types import KeyboardButton, ReplyKeyboardMarkup
+from jinja2 import Environment, FileSystemLoader
+
+env = Environment(loader=FileSystemLoader("template/messages"))
 
 
 def load_keyboards(file_path: str) -> Dict[str, ReplyKeyboardMarkup]:
@@ -53,3 +56,8 @@ def load_valid_commands(json_file_path: str) -> Dict[str, List[str]]:
     with open(json_file_path, "r", encoding="utf-8") as file:
         data = json.load(file)
         return data["valid_commands"]
+
+
+def render_template_jinja(template_name, **context):
+    template = env.get_template(template_name)
+    return template.render(**context)
