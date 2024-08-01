@@ -20,7 +20,7 @@ from resources import config
 
 
 async def console_add_super_admin() -> str:
-    root = "template/"
+    root = "template"
     if not config.console()["give_role"]:
         return render_template_jinja(
             "add_super_admin/false_give_role.jinja2", root_directory_name=root
