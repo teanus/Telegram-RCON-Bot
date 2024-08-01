@@ -15,21 +15,34 @@
 
 
 from provider import db
+from render_template import render_template_jinja
 from resources import config
 
 
 async def console_add_super_admin() -> str:
+    root = "template/"
     if not config.console()["give_role"]:
-        return "Режим выдачи роли выключен. Пропускаем"
+        return render_template_jinja(
+            "add_super_admin/false_give_role.jinja2", root_directory_name=root
+        )
 
     admin_id = input(
-        "Введите id для выдачи прав super-админа или нажмите Enter для пропуска: "
+        render_template_jinja(
+            "add_super_admin/messages.jinja2", root_directory_name=root
+        )
     )
     if admin_id == "":
-        return "Закрытие"
+        return render_template_jinja(
+            "add_super_admin/exit.jinja2", root_directory_name=root
+        )
 
+    context = {"admin_id": admin_id}
     if await db.check_admin(admin_id):
-        return f"{admin_id} уже есть в списке супер-админов"
+        return render_template_jinja(
+            "add_super_admin/admin_exists.jinja2", root_directory_name=root, **context
+        )
 
     await db.add_admin(admin_id)
-    return f"{admin_id} был добавлен в список супер-админов"
+    return render_template_jinja(
+        "add_super_admin/add_admin.jinja2", root_directory_name=root, **context
+    )
