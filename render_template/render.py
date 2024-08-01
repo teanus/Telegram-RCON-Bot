@@ -12,7 +12,7 @@
 #    ╚═╝   ╚══════╝╚═╝  ╚═╝╚═╝  ╚═══╝ ╚═════╝ ╚══════╝
 
 import json
-from typing import Dict, List
+from typing import Dict, List, Any
 
 from aiogram.types import KeyboardButton, ReplyKeyboardMarkup
 from jinja2 import Environment, FileSystemLoader
@@ -58,6 +58,17 @@ def load_valid_commands(json_file_path: str) -> Dict[str, List[str]]:
         return data["valid_commands"]
 
 
-def render_template_jinja(template_name, **context):
+def render_template_jinja(template_name: str, **context: Any) -> str:
+    """
+    Загружает шаблон Jinja2 с заданным контекстом.
+
+    :param template_name: Имя файла шаблона для рендеринга.
+    :type template_name: str
+    :param context: Произвольные ключевые аргументы, представляющие переменные контекста,
+                    которые будут переданы в шаблон.
+    :type context: Any
+    :return: Загруженный шаблон в виде строки.
+    :rtype: str
+    """
     template = env.get_template(template_name)
     return template.render(**context)
