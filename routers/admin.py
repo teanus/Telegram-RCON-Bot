@@ -75,7 +75,7 @@ async def cancel_settings(message: types.Message, state: FSMContext) -> None:
 
 
 async def back_to_state(
-        message: types.Message, state: FSMContext, state_to_set: State
+    message: types.Message, state: FSMContext, state_to_set: State
 ) -> None:
     context = {}
 
@@ -103,12 +103,12 @@ async def back_to_state_settings(message: types.Message, state: FSMContext) -> N
 
 
 async def back_to_state_on_markup(
-        message: types.Message,
-        state: FSMContext,
-        template_name: str,
-        markup: types.ReplyKeyboardMarkup,
-        state_to_set: State,
-        **context,
+    message: types.Message,
+    state: FSMContext,
+    template_name: str,
+    markup: types.ReplyKeyboardMarkup,
+    state_to_set: State,
+    **context,
 ) -> None:
     message_text = render_template_jinja(template_name, **context)
     await message.answer(message_text, reply_markup=markup)
@@ -126,7 +126,7 @@ async def back_state_commands_switch(message: types.Message, state: FSMContext) 
 
 
 async def back_state_remove_roles_switcher(
-        message: types.Message, state: FSMContext
+    message: types.Message, state: FSMContext
 ) -> None:
     await back_to_state_on_markup(
         message,
@@ -377,13 +377,25 @@ async def command_remove(message: types.Message) -> None:
 
     if exists:
         await db.remove_black_list(low)
-        log_message = render_template_jinja("admin/command_remove/done_logger.jinja2", **context)
-        success_message = render_template_jinja("admin/command_remove/done_command_exists.jinja2")
+        log_message = render_template_jinja(
+            "admin/command_remove/done_logger.jinja2", **context
+        )
+        success_message = render_template_jinja(
+            "admin/command_remove/done_command_exists.jinja2"
+        )
     else:
-        log_message = (render_template_jinja("admin/command_remove/not_banned_logger.jinja2", **context))
-        success_message = (render_template_jinja("admin/command_remove/not_banned_command.jinja2"))
+        log_message = render_template_jinja(
+            "admin/command_remove/not_banned_logger.jinja2", **context
+        )
+        success_message = render_template_jinja(
+            "admin/command_remove/not_banned_command.jinja2"
+        )
 
-    await groups_logger(render_template_jinja("admin/command_remove/groups_logger.jinja2"), chat_id, message.text)
+    await groups_logger(
+        render_template_jinja("admin/command_remove/groups_logger.jinja2"),
+        chat_id,
+        message.text,
+    )
     logger.info(log_message)
     await message.answer(success_message)
 

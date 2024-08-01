@@ -28,6 +28,7 @@ from routers.common import register_routers as register_common_handlers
 from routers.other import other_router
 from routers.other import register_routers as register_other_handlers
 
+
 async def on_startup() -> None:
     await console_add_super_admin()
     print("Бот начал работу!")
