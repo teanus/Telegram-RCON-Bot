@@ -27,7 +27,7 @@ common_router = Router()
 async def start(message: Message) -> None:
     chat_id = message.chat.id
     menu = await get_main_menu(chat_id)
-    is_admin = await db.check_admin_user(chat_id)
+    is_admin = await db.check_admin(chat_id)
     has_access = await db.user_exists(chat_id)
     context = {"is_admin": is_admin, "has_access": has_access}
 
