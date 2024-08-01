@@ -19,6 +19,7 @@ import asyncio
 from add_super_admin import console_add_super_admin
 from create_bot import bot, dp
 from logger.log import logger
+from render_template import render_template_jinja
 from routers.admin import admin_router
 from routers.admin import register_routers as register_admin_handlers
 from routers.client import client_router
@@ -27,7 +28,7 @@ from routers.common import common_router
 from routers.common import register_routers as register_common_handlers
 from routers.other import other_router
 from routers.other import register_routers as register_other_handlers
-from render_template import render_template_jinja
+
 
 async def on_startup() -> None:
     await console_add_super_admin()
