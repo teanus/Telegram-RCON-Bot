@@ -42,7 +42,7 @@ client_router = Router()
 async def rcon_cmd(message: types.Message, state: FSMContext) -> None:
     chat_id = message.chat.id
     user_id = message.from_user.id
-    is_admin = await db.check_admin_user(chat_id)
+    is_admin = await db.check_admin(chat_id)
     context = {"user_id": user_id, "is_admin": is_admin}
 
     if is_admin or await db.user_exists(chat_id):
@@ -59,7 +59,7 @@ async def rcon_cmd(message: types.Message, state: FSMContext) -> None:
 async def cancel_state_rcon(message: types.Message, state: FSMContext) -> None:
     chat_id = message.chat.id
     main_menu = await get_main_menu(chat_id)
-    is_admin = await db.check_admin_user(chat_id)
+    is_admin = await db.check_admin(chat_id)
     context = {"is_admin": is_admin}
 
     text = render_template_jinja("client/cancel_state_rcon/messages.jinja2", **context)
@@ -72,7 +72,7 @@ async def get_command(message: types.Message, state: FSMContext) -> None:
     user_id = message.from_user.id
     low = message.text.lower()
     command = low.split(" ", 1)
-    is_admin = await db.check_admin_user(chat_id)
+    is_admin = await db.check_admin(chat_id)
     context = {
         "user_id": user_id,
         "command": low,
