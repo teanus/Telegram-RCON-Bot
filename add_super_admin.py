@@ -28,7 +28,7 @@ async def console_add_super_admin() -> str:
     if admin_id == "":
         return "Закрытие"
 
-    if await db.check_admin_user(admin_id):
+    if await db.check_admin(admin_id):
         return f"{admin_id} уже есть в списке супер-админов"
 
     await db.add_admin(admin_id)

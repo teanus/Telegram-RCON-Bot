@@ -5,7 +5,7 @@ from provider import db
 
 
 async def get_main_menu(user_id: int) -> types.ReplyKeyboardMarkup:
-    if await db.check_admin_user(user_id):
+    if await db.check_admin(user_id):
         return kb_admin.main_menu
     elif await db.user_exists(user_id):
         return kb_client.main_menu
