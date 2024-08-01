@@ -16,5 +16,8 @@
     "file_name": "info",
     "max_bytes": 5242880,
     "backup_count": 2
+  },
+  "name_fields_table_list_commands":{
+    "name": "Команды"
   }
 }

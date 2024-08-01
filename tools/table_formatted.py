@@ -1,10 +1,11 @@
 from prettytable import PrettyTable
 
+from resources import config
+
 
 async def get_commands_table_formatted(commands: str) -> str:
     table = PrettyTable()
-    table.field_names = ["Команды"]
-
+    table.field_names = config.name_fields_table_list_commands()["name"]
     for command in commands.split("\n"):
         table.add_row([command])
 

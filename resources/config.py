@@ -48,3 +48,7 @@ def console() -> Dict[str, Any]:
 
 def logging_config() -> Dict[str, Any]:
     return read_json()["logging"]
+
+
+def name_fields_table_list_commands() -> Dict[str, Any]:
+    return read_json()["name_fields_table_list_commands"]
