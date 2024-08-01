@@ -25,7 +25,7 @@ from keyboards import kb_admin
 from logger.group_logger import groups_logger
 from logger.log import logger
 from provider import db
-from render_template import load_valid_commands
+from render_template import load_valid_commands, render_template_jinja
 from tools import get_commands_table_formatted
 
 json_file_path = os.path.join("template", "commands", "admin.json")
@@ -51,26 +51,36 @@ admin_router = Router()
 
 async def settings_panel(message: types.Message, state: FSMContext) -> None:
     chat_id = message.chat.id
-    if await db.check_admin_user(chat_id):
-        await message.answer(
-            "Вы вошли в админ панель! Выберите действие",
-            reply_markup=kb_admin.admin_panel_menu,
+    if await db.check_admin(chat_id):
+        context = {"chat_id": chat_id}
+
+        message_text = render_template_jinja(
+            "admin/settings_panel/message.jinja2", **context
         )
-        logger.info(f"Вход в админ панель выполнен пользователем с id: {chat_id}")
+        await message.answer(message_text, reply_markup=kb_admin.admin_panel_menu)
+
+        log_text = render_template_jinja(
+            "admin/settings_panel/logger.jinja2", **context
+        )
+        logger.info(log_text)
+
         await state.set_state(AdminState.settings)
 
 
 async def cancel_settings(message: types.Message, state: FSMContext) -> None:
-    await message.answer("Вы вышли из админ панели", reply_markup=kb_admin.main_menu)
+    context = {}
+    message_text = render_template_jinja("admin/cancel_settings.jinja2", **context)
+    await message.answer(message_text, reply_markup=kb_admin.main_menu)
     await state.clear()
 
 
 async def back_to_state(
-    message: types.Message, state: FSMContext, state_to_set: State
+        message: types.Message, state: FSMContext, state_to_set: State
 ) -> None:
-    await message.answer(
-        "Возвращаемся назад!", reply_markup=kb_admin.roles_switch_panel
-    )
+    context = {}
+
+    message_text = render_template_jinja("admin/back_to_state.jinja2", **context)
+    await message.answer(message_text, reply_markup=kb_admin.roles_switch_panel)
     await state.set_state(state_to_set)
 
 
@@ -83,18 +93,25 @@ async def back_state_remove(message: types.Message, state: FSMContext) -> None:
 
 
 async def back_to_state_settings(message: types.Message, state: FSMContext) -> None:
-    await message.answer("Возвращаемся назад!", reply_markup=kb_admin.admin_panel_menu)
+    context = {}
+
+    message_text = render_template_jinja(
+        "admin/back_to_state_settings.jinja2", **context
+    )
+    await message.answer(message_text, reply_markup=kb_admin.admin_panel_menu)
     await state.set_state(AdminState.settings)
 
 
 async def back_to_state_on_markup(
-    message: types.Message,
-    state: FSMContext,
-    reply_text: str,
-    markup,
-    state_to_set: State,
+        message: types.Message,
+        state: FSMContext,
+        template_name: str,
+        markup: types.ReplyKeyboardMarkup,
+        state_to_set: State,
+        **context,
 ) -> None:
-    await message.answer(reply_text, reply_markup=markup)
+    message_text = render_template_jinja(template_name, **context)
+    await message.answer(message_text, reply_markup=markup)
     await state.set_state(state_to_set)
 
 
@@ -102,19 +119,19 @@ async def back_state_commands_switch(message: types.Message, state: FSMContext) 
     await back_to_state_on_markup(
         message,
         state,
-        "Возвращаемся назад!",
+        "admin/back_state_commands_switch.jinja2",
         kb_admin.panel_commands_switch,
         AdminState.commands,
     )
 
 
 async def back_state_remove_roles_switcher(
-    message: types.Message, state: FSMContext
+        message: types.Message, state: FSMContext
 ) -> None:
     await back_to_state_on_markup(
         message,
         state,
-        "Возвращаемся назад!",
+        "admin/back_state_remove_roles_switcher.jinja2",
         kb_admin.admin_panel_menu,
         AdminState.settings,
     )
@@ -124,124 +141,174 @@ async def back_state_roles(message: types.Message, state: FSMContext) -> None:
     await back_to_state_on_markup(
         message,
         state,
-        "Возвращаемся назад!",
+        "admin/back_state_remove_roles_switcher.jinja2",
         kb_admin.roles_panel,
         AdminState.roles_switch,
     )
 
 
 async def roles_switch(message: types.Message, state: FSMContext) -> None:
-    await message.answer(
-        "Выберите действие или вернитесь назад.", reply_markup=kb_admin.roles_panel
-    )
+    context = {}
+
+    message_text = render_template_jinja("admin/roles_switch.jinja2", **context)
+    await message.answer(message_text, reply_markup=kb_admin.roles_panel)
     await state.set_state(AdminState.roles_switch)
 
 
 async def give_roles(message: types.Message, state: FSMContext) -> None:
-    await message.answer(
-        "Выберите какую роль нужно выдать", reply_markup=kb_admin.roles_switch_panel
-    )
+    context = {}
+
+    message_text = render_template_jinja("admin/roles_switch.jinja2", **context)
+    await message.answer(message_text, reply_markup=kb_admin.roles_switch_panel)
     await state.set_state(AdminState.give)
 
 
 async def remove_role(message: types.Message, state: FSMContext) -> None:
-    await message.answer(
-        "Выберите какую роль нужно снять", reply_markup=kb_admin.roles_switch_panel
-    )
+    context = {}
+
+    message_text = render_template_jinja("admin/remove_role.jinja2", **context)
+    await message.answer(message_text, reply_markup=kb_admin.roles_switch_panel)
     await state.set_state(AdminState.remove)
 
 
 async def remove_role_user(message: types.Message, state: FSMContext) -> None:
-    await message.answer("Введите id для снятия прав", reply_markup=kb_admin.admin_back)
+    context = {}
+
+    message_text = render_template_jinja("admin/remove_role_user.jinja2", **context)
+    await message.answer(message_text, reply_markup=kb_admin.admin_back)
     await state.set_state(AdminState.remove_user)
 
 
 async def remove_role_admin(message: types.Message, state: FSMContext) -> None:
-    await message.answer("Введите id для снятия роли", reply_markup=kb_admin.admin_back)
+    context = {}
+
+    message_text = render_template_jinja("admin/remove_role_admin.jinja2", **context)
+    await message.answer(message_text, reply_markup=kb_admin.admin_back)
     await state.set_state(AdminState.remove_admin)
 
 
 async def roles_add_user(message: types.Message, state: FSMContext) -> None:
-    await message.answer(
-        "Введите id для выдачи прав пользователя: ", reply_markup=kb_admin.admin_back
-    )
+    context = {}
+
+    message_text = render_template_jinja("admin/roles_add_user.jinja2", **context)
+    await message.answer(message_text, reply_markup=kb_admin.admin_back)
     await state.set_state(AdminState.add_user)
 
 
 async def roles_add_admin(message: types.Message, state: FSMContext) -> None:
-    await message.answer(
-        "Введите id для выдачи прав super-админа: ", reply_markup=kb_admin.admin_back
-    )
+    context = {}
+
+    message_text = render_template_jinja("admin/roles_add_user.jinja2", **context)
+    await message.answer(message_text, reply_markup=kb_admin.admin_back)
     await state.set_state(AdminState.add_admin)
 
 
 async def get_add_user_id(message: types.Message) -> None:
     chat_id = message.chat.id
     text_id = message.text
+
     if not text_id.isdigit():
-        await message.reply(
-            "Это не является ID, id должен содержать ТОЛЬКО цифры и ничего другого. Пример: 78715102429"
+        context = {}
+        message_text = render_template_jinja(
+            "admin/get_add_user_id/invalid_id.jinja2", **context
         )
+        await message.reply(message_text)
     elif await db.user_exists(text_id):
-        await message.answer(
-            "Пользователь с таким id уже есть в списке. Введите другой id или нажмите 'назад'"
+        context = {}
+        message_text = render_template_jinja(
+            "admin/get_add_user_id/user_exists.jinja2", **context
         )
+        await message.answer(message_text)
     else:
-        await groups_logger("Выдача роли обычного игрока: ", chat_id, message.text)
+        context = {"chat_id": chat_id, "message.text": message.text, "text_id": text_id}
+        await groups_logger(
+            "admin/get_add_user_id/groups_logger.jinja2", chat_id, message.text
+        )
         await db.add_user(text_id)
-        await message.answer(f"Роль 'обычная' выдана пользователю с id {message.text}")
+        message_text = render_template_jinja(
+            "admin/get_add_user_id/user_added.jinja2", **context
+        )
+        await message.answer(message_text)
 
 
 async def get_add_admin_id(message: types.Message) -> None:
     chat_id = message.chat.id
     text_id = message.text
     if not text_id.isdigit():
-        await message.reply(
-            "Это не является ID, id должен содержать ТОЛЬКО цифры и ничего другого. Пример: 78715102429"
+        context = {}
+        message_text = render_template_jinja(
+            "admin/get_add_admin_id/invalid_id.jinja2", **context
         )
-    elif await db.check_admin_user(message.text):
-        await message.answer(
-            "Этот id уже имеет роль администратора. Введите другой id или нажмите 'назад'"
+        await message.reply(message_text)
+    elif await db.check_admin(message.text):
+        context = {}
+        message_text = render_template_jinja(
+            "admin/get_add_admin_id/admin_exists.jinja2", **context
         )
+        await message.answer(message_text)
     else:
-        await groups_logger("Выдача роли администратора: ", chat_id, message.text)
-        await db.add_admin(message.text)
-        await message.answer(
-            f"Вы выдали администратора пользователю с id {message.text}"
+        context = {"chat_id": chat_id, "message.text": message.text, "text_id": text_id}
+        await groups_logger(
+            "admin/get_add_admin_id/groups_logger.jinja2", chat_id, message.text
         )
+        await db.add_user(text_id)
+        message_text = render_template_jinja(
+            "admin/get_add_admin_id/admin_added.jinja2", **context
+        )
+        await message.answer(message_text)
 
 
 async def get_remove_user_id(message: types.Message) -> None:
     chat_id = message.chat.id
     if not await db.user_exists(message.text):
-        await message.answer(
-            "Пользователь с таким id нет в списке. Введите другой id или нажмите 'назад'"
+        context = {}
+        message_text = render_template_jinja(
+            "admin/get_remove_user_id/not_user_exists.jinja2", **context
         )
+        await message.answer(message_text)
     else:
-        await groups_logger("Снятие роли пользователя: ", chat_id, message.text)
-        logger.info(f"{chat_id} - снял роль пользователя с {message.text}")
+        context = {"chat_id": chat_id, "message_text": message.text}
+        await groups_logger(
+            render_template_jinja("admin/get_remove_user_id/groups_logger.jinja2"),
+            chat_id,
+            message.text,
+        )
+        logger.info(
+            render_template_jinja("admin/get_remove_user_id/logger.jinja2", **context)
+        )
         await message.answer(await db.user_remove(message.text))
 
 
 async def get_remove_admin_id(message: types.Message) -> None:
     chat_id = message.chat.id
-    if not await db.check_admin_user(message.text):
-        await message.answer(
-            "В бд нет администратора с таким id. Введите другой id или нажмите 'назад'"
+    if not await db.check_admin(message.text):
+        context = {}
+        message_text = render_template_jinja(
+            "admin/get_remove_admin_id/not_admin_exists.jinja2", **context
         )
+        await message.answer(message_text)
     else:
-        logger.info(f"{chat_id} - снял роль администратора с {message.text}")
-        await groups_logger("Снятие роли администратора: ", chat_id, message.text)
+        context = {"chat_id": chat_id, "message_text": message.text}
+        await groups_logger(
+            render_template_jinja("admin/get_remove_admin_id/groups_logger.jinja2"),
+            chat_id,
+            message.text,
+        )
+        logger.info(
+            render_template_jinja("admin/get_remove_admin_id/logger.jinja2", **context)
+        )
         await message.answer(await db.admin_remove(message.text))
 
 
 async def commands_settings(message: types.Message, state: FSMContext) -> None:
     commands = await db.commands_all()
     table = await get_commands_table_formatted(commands)
-    await message.answer("Список заблокированных команд на данный момент: ")
+    await message.answer(
+        render_template_jinja("admin/commands_settings/list_commands.jinja2")
+    )
     await message.answer(f"```commands_list {table}```", parse_mode="Markdown")
     await message.answer(
-        "Выберите, что нужно сделать. Добавить или удалить команды из списка. Либо вернитесь назад",
+        render_template_jinja("admin/commands_settings/messages.jinja2"),
         reply_markup=kb_admin.panel_commands_switch,
     )
     await state.set_state(AdminState.commands)
@@ -249,14 +316,16 @@ async def commands_settings(message: types.Message, state: FSMContext) -> None:
 
 async def button_commands_add(message: types.Message, state: FSMContext) -> None:
     await message.answer(
-        "Пришлите команду или вернитесь назад", reply_markup=kb_admin.admin_back
+        render_template_jinja("admin/button_commands_add.jinja2"),
+        reply_markup=kb_admin.admin_back,
     )
     await state.set_state(AdminState.command_add)
 
 
 async def button_commands_remove(message: types.Message, state: FSMContext) -> None:
     await message.answer(
-        "Пришлите команду или вернитесь назад", reply_markup=kb_admin.admin_back
+        render_template_jinja("admin/button_commands_remove.jinja2"),
+        reply_markup=kb_admin.admin_back,
     )
     await state.set_state(AdminState.command_remove)
 
@@ -264,23 +333,39 @@ async def button_commands_remove(message: types.Message, state: FSMContext) -> N
 async def command_add(message: types.Message) -> None:
     chat_id = message.chat.id
     low = message.text.lower()
-
     exists = await db.command_exists(low)
 
     if exists:
+        context = {"chat_id": chat_id, "low": low}
         await message.answer(
-            "Эта команда была заблокирована ранее. Введите другую или вернитесь назад"
+            render_template_jinja("admin/command_add/command_exists_banned.jinja2")
         )
         logger.info(
-            f"{chat_id} - попытался заблокировать команду {low}, но она уже в списках"
+            render_template_jinja("admin/command_add/logger_command_exists.jinja2")
         )
-        await groups_logger("Попытался заблокировать команду: ", chat_id, message.text)
+        await groups_logger(
+            render_template_jinja(
+                "admin/command_add/group_logger_command_exists.jinja2"
+            ),
+            chat_id,
+            message.text,
+        )
     else:
         await db.add_black_list(low)
-        logger.info(f"{chat_id} - добавил команду в черный список. Команда: {low}")
-        await groups_logger("Добавил команду в черный список", chat_id, message.text)
+        logger.info(
+            render_template_jinja("admin/command_add/done_logger_banned_command.jinja2")
+        )
+        await groups_logger(
+            render_template_jinja(
+                "admin/command_add/done_group_logger_banned_command.jinja2"
+            ),
+            chat_id,
+            message.text,
+        )
         await message.answer(
-            "Команда была заблокирована. Пришлите еще одну команду, или вернитесь назад"
+            render_template_jinja(
+                "admin/command_add/done_message_banned_command.jinja2"
+            )
         )
 
 
@@ -288,21 +373,17 @@ async def command_remove(message: types.Message) -> None:
     chat_id = message.chat.id
     low = message.text.lower()
     exists = await db.command_exists(low)
+    context = {"chat_id": chat_id, "low": low}
 
     if exists:
         await db.remove_black_list(low)
-        log_message = f"{chat_id} - разблокировал команду {low}"
-        success_message = "Команда разблокирована! Пришлите еще команду для разблокировки, или вернитесь назад"
+        log_message = render_template_jinja("admin/command_remove/done_logger.jinja2", **context)
+        success_message = render_template_jinja("admin/command_remove/done_command_exists.jinja2")
     else:
-        log_message = (
-            f"{chat_id} - попытался разблокировать команду {low}, но она не в списках"
-        )
-        success_message = (
-            "Данная команда не находится в списке заблокированных. Пришлите другую команду, "
-            "или вернитесь назад "
-        )
+        log_message = (render_template_jinja("admin/command_remove/not_banned_logger.jinja2", **context))
+        success_message = (render_template_jinja("admin/command_remove/not_banned_command.jinja2"))
 
-    await groups_logger("Удаление команды: ", chat_id, message.text)
+    await groups_logger(render_template_jinja("admin/command_remove/groups_logger.jinja2"), chat_id, message.text)
     logger.info(log_message)
     await message.answer(success_message)
 
