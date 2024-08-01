@@ -99,7 +99,7 @@ class SqliteDatabase:
         query = "INSERT INTO admins(telegram_id) VALUES(?)"
         return await self.execute_query(query, (user_id,))
 
-    async def check_admin_user(self, user_id: str) -> bool:
+    async def check_admin(self, user_id: str) -> bool:
         query = "SELECT 1 FROM admins WHERE telegram_id = ?"
         result = await self.fetch_all(query, (user_id,))
         return bool(result)
@@ -108,18 +108,18 @@ class SqliteDatabase:
         query = "DELETE FROM admins WHERE telegram_id = ?"
         return await self.execute_query(query, (user_id,))
 
-    async def add_black_list(self, cmd: str) -> bool:
+    async def add_black_list(self, command: str) -> bool:
         query = "INSERT INTO black_list(command) VALUES(?)"
-        return await self.execute_query(query, (cmd,))
+        return await self.execute_query(query, (command,))
 
-    async def command_exists(self, cmd: str) -> bool:
+    async def command_exists(self, command: str) -> bool:
         query = "SELECT 1 FROM black_list WHERE command = ?"
-        result = await self.fetch_all(query, (cmd,))
+        result = await self.fetch_all(query, (command,))
         return bool(result)
 
-    async def remove_black_list(self, cmd: str) -> bool:
+    async def remove_black_list(self, command: str) -> bool:
         query = "DELETE FROM black_list WHERE command = ?"
-        return await self.execute_query(query, (cmd,))
+        return await self.execute_query(query, (command,))
 
     async def commands_all(self) -> str:
         query = "SELECT command FROM black_list"
@@ -206,7 +206,7 @@ class PostgresqlDatabase:
         query = "INSERT INTO admins(telegram_id) VALUES($1)"
         return await self.execute_query(query, [user_id])
 
-    async def check_admin_user(self, user_id: str) -> bool:
+    async def check_admin(self, user_id: str) -> bool:
         query = "SELECT EXISTS(SELECT 1 FROM admins WHERE telegram_id = $1)"
         result = await self.fetch_all(query, [user_id])
         return result[0]["exists"]
@@ -215,18 +215,18 @@ class PostgresqlDatabase:
         query = "DELETE FROM admins WHERE telegram_id = $1"
         return await self.execute_query(query, [user_id])
 
-    async def add_black_list(self, cmd: str) -> bool:
+    async def add_black_list(self, command: str) -> bool:
         query = "INSERT INTO black_list(command) VALUES($1)"
-        return await self.execute_query(query, [cmd])
+        return await self.execute_query(query, [command])
 
-    async def command_exists(self, cmd: str) -> bool:
+    async def command_exists(self, command: str) -> bool:
         query = "SELECT EXISTS(SELECT 1 FROM black_list WHERE command = $1)"
-        result = await self.fetch_all(query, [cmd])
+        result = await self.fetch_all(query, [command])
         return result[0]["exists"]
 
-    async def remove_black_list(self, cmd: str) -> bool:
+    async def remove_black_list(self, command: str) -> bool:
         query = "DELETE FROM black_list WHERE command = $1"
-        return await self.execute_query(query, [cmd])
+        return await self.execute_query(query, [command])
 
     async def commands_all(self) -> str:
         query = "SELECT command FROM black_list"
@@ -264,8 +264,17 @@ class DataBase:
     async def add_admin(self, user_id: str) -> bool:
         return await self.database.add_admin(user_id)
 
-    async def check_admin_user(self, user_id: str) -> bool:
-        return await self.database.check_admin_user(user_id)
+    async def check_admin(self, user_id: str) -> bool:
+        return await self.database.check_admin(user_id)
+
+    async def add_black_list(self, command: str) -> bool:
+        return await self.database.add_black_list(command)
+
+    async def remove_black_list(self, command: str) -> bool:
+        return await self.database.remove_black_list(command)
+
+    async def command_exists(self, command: str) -> bool:
+        return await self.database.command_exists(command)
 
     async def commands_all(self) -> str:
         return await self.database.commands_all()
