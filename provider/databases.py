@@ -31,10 +31,10 @@ class SqliteDatabase:
     async def connect(self) -> None:
         try:
             self.con = await aiosqlite.connect(config.sqlite()["name"])
-            print("SQLite подключился")
+            print("SQLite: connected")
             await self.initialize_tables()
         except aiosqlite.Error as error:
-            print(f"Ошибка при подключении к базе данных SQLite: {error}")
+            print(f"Error connecting to the SQLite database: {error}")
 
     async def disconnect(self) -> None:
         if self.con:
@@ -68,7 +68,7 @@ class SqliteDatabase:
             await self.con.commit()
             return True
         except aiosqlite.Error as error:
-            print(f"Ошибка при выполнении запроса SQLite: {error}")
+            print(f"Error executing SQLite query: {error}")
             return False
 
     async def fetch_all(self, query: str, params=None) -> list:
@@ -79,7 +79,7 @@ class SqliteDatabase:
                 result = await cursor.fetchall()
             return result
         except aiosqlite.Error as error:
-            print(f"Ошибка при выполнении запроса SQLite: {error}")
+            print(f"Error executing SQLite query: {error}")
             return []
 
     async def add_user(self, user_id: str) -> bool:
@@ -140,10 +140,10 @@ class PostgresqlDatabase:
                 host=getenv("postgre_host"),
                 port=getenv("postgre_port"),
             )
-            print("PostgreSQL: подключился")
+            print("PostgreSQL: connected")
             await self.initialize_tables()
         except asyncpg.PostgresError as error:
-            print(f"Ошибка при подключении к базе данных PostgreSQL: {error}")
+            print(f"Error connecting to the postgresql database: {error}")
 
     async def disconnect(self) -> None:
         if self.con:
@@ -176,7 +176,7 @@ class PostgresqlDatabase:
             await self.con.commit()
             return True
         except asyncpg.PostgresError as error:
-            print(f"Ошибка при выполнении запроса PostgreSQL: {error}")
+            print(f"Error executing PostgreSQL query: {error}")
             return False
 
     async def fetch_all(self, query: str, params=None) -> list:
@@ -186,7 +186,7 @@ class PostgresqlDatabase:
             result = await self.con.fetch(query, *params or ())
             return result
         except asyncpg.PostgresError as error:
-            print(f"Ошибка при выполнении запроса PostgreSQL: {error}")
+            print(f"Error executing PostgreSQL query: {error}")
             return []
 
     async def add_user(self, user_id: str) -> bool:
@@ -243,7 +243,7 @@ class DataBase:
             self.database = PostgresqlDatabase()
         else:
             raise ValueError(
-                f"{db_type} - неподдерживаемый тип базы данных.\nИспользуйте PostgreSQL или SQLite"
+                f"{db_type} - Unsupported database type. Please use PostgreSQL or SQLite."
             )
 
     async def connect(self) -> None:
