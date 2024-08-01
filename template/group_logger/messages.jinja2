@@ -1,0 +1,2 @@
+{%- set user_type = "Админ" if is_admin else "Пользователь" -%}
+{{ prefix }} {{ user_type }} с ID {{ user_id }} - ввел команду: {{ message }}
