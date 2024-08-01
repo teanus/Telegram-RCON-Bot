@@ -334,18 +334,18 @@ async def command_add(message: types.Message) -> None:
     chat_id = message.chat.id
     low = message.text.lower()
     exists = await db.command_exists(low)
-
+    context = {"chat_id": chat_id, "low": low}
     if exists:
-        context = {"chat_id": chat_id, "low": low}
+
         await message.answer(
             render_template_jinja("admin/command_add/command_exists_banned.jinja2")
         )
         logger.info(
-            render_template_jinja("admin/command_add/logger_command_exists.jinja2")
+            render_template_jinja("admin/command_add/logger_command_exists.jinja2", **context)
         )
         await groups_logger(
             render_template_jinja(
-                "admin/command_add/group_logger_command_exists.jinja2"
+                "admin/command_add/group_logger_command_exists.jinja2", **context
             ),
             chat_id,
             message.text,
@@ -353,11 +353,11 @@ async def command_add(message: types.Message) -> None:
     else:
         await db.add_black_list(low)
         logger.info(
-            render_template_jinja("admin/command_add/done_logger_banned_command.jinja2")
+            render_template_jinja("admin/command_add/done_logger_banned_command.jinja2", **context)
         )
         await groups_logger(
             render_template_jinja(
-                "admin/command_add/done_group_logger_banned_command.jinja2"
+                "admin/command_add/done_group_logger_banned_command.jinja2", **context
             ),
             chat_id,
             message.text,
