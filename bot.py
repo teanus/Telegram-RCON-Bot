@@ -27,17 +27,20 @@ from routers.common import common_router
 from routers.common import register_routers as register_common_handlers
 from routers.other import other_router
 from routers.other import register_routers as register_other_handlers
+from render_template import render_template_jinja
 
 
 async def on_startup() -> None:
     await console_add_super_admin()
-    print("Бот начал работу!")
-    logger.info("Бот запущен!")
+    text = render_template_jinja("bot/on_startup.jinja2")
+    print(text)
+    logger.info(text)
 
 
 async def on_shutdown() -> None:
-    print("Бот выключен")
-    logger.info("Бот выключен")
+    text = render_template_jinja("bot/on_shutdown.jinja2")
+    print(text)
+    logger.info(text)
 
 
 async def main():
@@ -47,7 +50,7 @@ async def main():
     dp.include_router(client_router)
     dp.include_router(admin_router)
     dp.include_router(common_router)
-    # Регистрация обработчиков для каждого роутера
+
     await register_other_handlers()
     await register_client_handlers()
     await register_admin_handlers()
