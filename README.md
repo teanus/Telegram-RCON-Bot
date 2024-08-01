@@ -1,5 +1,5 @@
 
-# TeaRCON 3.2
+# TeaRCON
 
 Telegram RCON bot для игры Minecraft Bedrock и Java edition
 
