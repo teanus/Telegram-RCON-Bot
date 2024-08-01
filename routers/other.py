@@ -29,18 +29,15 @@ valid_commands = load_valid_commands(json_file_path)
 async def id_command(message: types.Message) -> None:
     chat_id = message.chat.id
     context = {"chat_id": chat_id}
-    text = render_template_jinja("other/id_command.jinja2", **context)
-    await message.reply(text)
+    await message.reply(render_template_jinja("other/id_command.jinja2", **context))
 
 
 async def info_command(message: types.Message) -> None:
-    text = render_template_jinja("other/info_command.jinja2")
-    await message.reply(text)
+    await message.answer("Разработчик: t.me/teanus\nСайт: https://teanus.ru")
 
 
 async def support_command(message: types.Message) -> None:
-    text = render_template_jinja("other/support_command.jinja2")
-    await message.reply(text)
+    await message.reply(render_template_jinja("other/support_command.jinja2"))
 
 
 async def register_routers() -> None:
