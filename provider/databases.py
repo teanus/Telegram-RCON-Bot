@@ -267,5 +267,8 @@ class DataBase:
     async def check_admin_user(self, user_id: str) -> bool:
         return await self.database.check_admin_user(user_id)
 
+    async def commands_all(self) -> str:
+        return await self.database.commands_all()
+
 
 db = DataBase(db_type=config.database()["type"])
