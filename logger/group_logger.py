@@ -23,6 +23,14 @@ from resources import config
 
 
 async def groups_logger(prefix: str, user_id: int, message: str) -> None:
+    """
+    Логирует сообщения в группы, если включен лагер групп.
+
+    :param prefix: Префикс сообщения.
+    :param user_id: ID пользователя.
+    :param message: Сообщение для логирования.
+    :return: None
+    """
     if config.telegram().get("on_logger_group"):
         is_admin = await db.check_admin(user_id)
         context = {

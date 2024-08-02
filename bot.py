@@ -31,6 +31,12 @@ from routers.other import register_routers as register_other_handlers
 
 
 async def on_startup() -> None:
+    """
+    Обработчик событий при запуске бота. Выполняет добавление супер-администратора
+    и логирует сообщение о запуске.
+
+    :return: None
+    """
     await console_add_super_admin()
     text = render_template_jinja("on_startup.jinja2", "template/bot")
     print(text)
@@ -38,6 +44,11 @@ async def on_startup() -> None:
 
 
 async def on_shutdown() -> None:
+    """
+    Обработчик событий при остановке бота. Логирует сообщение о завершении работы.
+
+    :return: None
+    """
     text = render_template_jinja("on_shutdown.jinja2", "template/bot")
     print(text)
     logger.info(text)
@@ -50,7 +61,6 @@ async def main():
     dp.include_router(client_router)
     dp.include_router(admin_router)
     dp.include_router(common_router)
-    # Регистрация обработчиков для каждого роутера
     await register_other_handlers()
     await register_client_handlers()
     await register_admin_handlers()
