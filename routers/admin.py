@@ -50,6 +50,14 @@ admin_router = Router()
 
 
 async def settings_panel(message: types.Message, state: FSMContext) -> None:
+    """
+    Отправляет панель настроек администратора.
+
+    :param message: Сообщение от пользователя.
+    :type message: types.Message
+    :param state: Состояние FSM.
+    :type state: FSMContext
+    """
     chat_id = message.chat.id
     if await db.check_admin(chat_id):
         context = {"chat_id": chat_id}
@@ -68,6 +76,14 @@ async def settings_panel(message: types.Message, state: FSMContext) -> None:
 
 
 async def cancel_settings(message: types.Message, state: FSMContext) -> None:
+    """
+    Отменяет состояние настроек и возвращает пользователя в главное меню.
+
+    :param message: Сообщение от пользователя.
+    :type message: types.Message
+    :param state: Состояние FSM.
+    :type state: FSMContext
+    """
     context = {}
     message_text = render_template_jinja("admin/cancel_settings.jinja2", **context)
     await message.answer(message_text, reply_markup=kb_admin.main_menu)
@@ -77,6 +93,16 @@ async def cancel_settings(message: types.Message, state: FSMContext) -> None:
 async def back_to_state(
     message: types.Message, state: FSMContext, state_to_set: State
 ) -> None:
+    """
+    Возвращает пользователя к заданному состоянию.
+
+    :param message: Сообщение от пользователя.
+    :type message: types.Message
+    :param state: Состояние FSM.
+    :type state: FSMContext
+    :param state_to_set: Состояние, к которому нужно вернуться.
+    :type state_to_set: State
+    """
     context = {}
 
     message_text = render_template_jinja("admin/back_to_state.jinja2", **context)
@@ -110,6 +136,21 @@ async def back_to_state_on_markup(
     state_to_set: State,
     **context,
 ) -> None:
+    """
+    Возвращает пользователя к заданному состоянию с указанным разметкой.
+
+    :param message: Сообщение от пользователя.
+    :type message: types.Message
+    :param state: Состояние FSM.
+    :type state: FSMContext
+    :param template_name: Имя шаблона Jinja для сообщения.
+    :type template_name: str
+    :param markup: Клавиатура для ответа.
+    :type markup: types.ReplyKeyboardMarkup
+    :param state_to_set: Состояние, к которому нужно вернуться.
+    :type state_to_set: State
+    :param context: Дополнительный контекст для шаблона.
+    """
     message_text = render_template_jinja(template_name, **context)
     await message.answer(message_text, reply_markup=markup)
     await state.set_state(state_to_set)
@@ -147,63 +188,110 @@ async def back_state_roles(message: types.Message, state: FSMContext) -> None:
     )
 
 
-async def roles_switch(message: types.Message, state: FSMContext) -> None:
-    context = {}
+async def send_message_with_state(
+    message: types.Message,
+    state: FSMContext,
+    template_name: str,
+    reply_markup: types.ReplyKeyboardMarkup,
+    new_state: State,
+) -> None:
+    """
+    Отправляет сообщение и устанавливает новое состояние.
 
-    message_text = render_template_jinja("admin/roles_switch.jinja2", **context)
-    await message.answer(message_text, reply_markup=kb_admin.roles_panel)
-    await state.set_state(AdminState.roles_switch)
+    :param message: Сообщение от пользователя.
+    :type message: types.Message
+    :param state: Состояние FSM.
+    :type state: FSMContext
+    :param template_name: Имя шаблона Jinja для сообщения.
+    :type template_name: str
+    :param reply_markup: Клавиатура для ответа.
+    :type reply_markup: types.ReplyKeyboardMarkup
+    :param new_state: Новое состояние.
+    :type new_state: State
+    """
+    context = {}
+    message_text = render_template_jinja(template_name, **context)
+    await message.answer(message_text, reply_markup=reply_markup)
+    await state.set_state(new_state)
+
+
+async def roles_switch(message: types.Message, state: FSMContext) -> None:
+    await send_message_with_state(
+        message,
+        state,
+        "admin/roles_switch.jinja2",
+        kb_admin.roles_panel,
+        AdminState.roles_switch,
+    )
 
 
 async def give_roles(message: types.Message, state: FSMContext) -> None:
-    context = {}
-
-    message_text = render_template_jinja("admin/roles_switch.jinja2", **context)
-    await message.answer(message_text, reply_markup=kb_admin.roles_switch_panel)
-    await state.set_state(AdminState.give)
+    await send_message_with_state(
+        message,
+        state,
+        "admin/roles_switch.jinja2",
+        kb_admin.roles_switch_panel,
+        AdminState.give,
+    )
 
 
 async def remove_role(message: types.Message, state: FSMContext) -> None:
-    context = {}
-
-    message_text = render_template_jinja("admin/remove_role.jinja2", **context)
-    await message.answer(message_text, reply_markup=kb_admin.roles_switch_panel)
-    await state.set_state(AdminState.remove)
+    await send_message_with_state(
+        message,
+        state,
+        "admin/remove_role.jinja2",
+        kb_admin.roles_switch_panel,
+        AdminState.remove,
+    )
 
 
 async def remove_role_user(message: types.Message, state: FSMContext) -> None:
-    context = {}
-
-    message_text = render_template_jinja("admin/remove_role_user.jinja2", **context)
-    await message.answer(message_text, reply_markup=kb_admin.admin_back)
-    await state.set_state(AdminState.remove_user)
+    await send_message_with_state(
+        message,
+        state,
+        "admin/remove_role_user.jinja2",
+        kb_admin.admin_back,
+        AdminState.remove_user,
+    )
 
 
 async def remove_role_admin(message: types.Message, state: FSMContext) -> None:
-    context = {}
-
-    message_text = render_template_jinja("admin/remove_role_admin.jinja2", **context)
-    await message.answer(message_text, reply_markup=kb_admin.admin_back)
-    await state.set_state(AdminState.remove_admin)
+    await send_message_with_state(
+        message,
+        state,
+        "admin/remove_role_admin.jinja2",
+        kb_admin.admin_back,
+        AdminState.remove_admin,
+    )
 
 
 async def roles_add_user(message: types.Message, state: FSMContext) -> None:
-    context = {}
-
-    message_text = render_template_jinja("admin/roles_add_user.jinja2", **context)
-    await message.answer(message_text, reply_markup=kb_admin.admin_back)
-    await state.set_state(AdminState.add_user)
+    await send_message_with_state(
+        message,
+        state,
+        "admin/roles_add_user.jinja2",
+        kb_admin.admin_back,
+        AdminState.add_user,
+    )
 
 
 async def roles_add_admin(message: types.Message, state: FSMContext) -> None:
-    context = {}
-
-    message_text = render_template_jinja("admin/roles_add_user.jinja2", **context)
-    await message.answer(message_text, reply_markup=kb_admin.admin_back)
-    await state.set_state(AdminState.add_admin)
+    await send_message_with_state(
+        message,
+        state,
+        "admin/roles_add_user.jinja2",
+        kb_admin.admin_back,
+        AdminState.add_admin,
+    )
 
 
 async def get_add_user_id(message: types.Message) -> None:
+    """
+    Обрабатывает добавление пользователя по ID.
+
+    :param message: Сообщение от пользователя.
+    :type message: types.Message
+    """
     chat_id = message.chat.id
     text_id = message.text
 
@@ -232,6 +320,12 @@ async def get_add_user_id(message: types.Message) -> None:
 
 
 async def get_add_admin_id(message: types.Message) -> None:
+    """
+    Обрабатывает добавление администратора по ID.
+
+    :param message: Сообщение от пользователя.
+    :type message: types.Message
+    """
     chat_id = message.chat.id
     text_id = message.text
     if not text_id.isdigit():
@@ -259,6 +353,12 @@ async def get_add_admin_id(message: types.Message) -> None:
 
 
 async def get_remove_user_id(message: types.Message) -> None:
+    """
+    Обрабатывает удаление пользователя по ID.
+
+    :param message: Сообщение от пользователя.
+    :type message: types.Message
+    """
     chat_id = message.chat.id
     if not await db.user_exists(message.text):
         context = {}
@@ -280,6 +380,12 @@ async def get_remove_user_id(message: types.Message) -> None:
 
 
 async def get_remove_admin_id(message: types.Message) -> None:
+    """
+    Обрабатывает удаление администратора по ID.
+
+    :param message: Сообщение от пользователя.
+    :type message: types.Message
+    """
     chat_id = message.chat.id
     if not await db.check_admin(message.text):
         context = {}
@@ -301,6 +407,14 @@ async def get_remove_admin_id(message: types.Message) -> None:
 
 
 async def commands_settings(message: types.Message, state: FSMContext) -> None:
+    """
+    Отправляет список команд и настройки команд.
+
+    :param message: Сообщение от пользователя.
+    :type message: types.Message
+    :param state: Состояние FSM.
+    :type state: FSMContext
+    """
     commands = await db.commands_all()
     table = await get_commands_table_formatted(commands)
     await message.answer(
@@ -315,6 +429,14 @@ async def commands_settings(message: types.Message, state: FSMContext) -> None:
 
 
 async def button_commands_add(message: types.Message, state: FSMContext) -> None:
+    """
+    Отправляет сообщение для добавления команды.
+
+    :param message: Сообщение от пользователя.
+    :type message: types.Message
+    :param state: Состояние FSM.
+    :type state: FSMContext
+    """
     await message.answer(
         render_template_jinja("admin/button_commands_add.jinja2"),
         reply_markup=kb_admin.admin_back,
@@ -323,6 +445,14 @@ async def button_commands_add(message: types.Message, state: FSMContext) -> None
 
 
 async def button_commands_remove(message: types.Message, state: FSMContext) -> None:
+    """
+    Отправляет сообщение для удаления команды.
+
+    :param message: Сообщение от пользователя.
+    :type message: types.Message
+    :param state: Состояние FSM.
+    :type state: FSMContext
+    """
     await message.answer(
         render_template_jinja("admin/button_commands_remove.jinja2"),
         reply_markup=kb_admin.admin_back,
@@ -331,6 +461,12 @@ async def button_commands_remove(message: types.Message, state: FSMContext) -> N
 
 
 async def command_add(message: types.Message) -> None:
+    """
+    Добавляет команду в черный список.
+
+    :param message: Сообщение от пользователя.
+    :type message: types.Message
+    """
     chat_id = message.chat.id
     low = message.text.lower()
     exists = await db.command_exists(low)
@@ -373,6 +509,12 @@ async def command_add(message: types.Message) -> None:
 
 
 async def command_remove(message: types.Message) -> None:
+    """
+    Удаляет команду из черного списка.
+
+    :param message: Сообщение от пользователя.
+    :type message: types.Message
+    """
     chat_id = message.chat.id
     low = message.text.lower()
     exists = await db.command_exists(low)
@@ -404,6 +546,11 @@ async def command_remove(message: types.Message) -> None:
 
 
 async def register_routers() -> None:
+    """
+    Регистрация routers для обработки сообщений admin.
+
+    :return: None
+    """
     admin_router.message.register(
         settings_panel, TextInFilter(valid_commands["settings"])
     )
