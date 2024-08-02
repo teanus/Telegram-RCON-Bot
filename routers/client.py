@@ -40,6 +40,15 @@ client_router = Router()
 
 
 async def rcon_cmd(message: types.Message, state: FSMContext) -> None:
+    """
+    Обрабатывает команду RCON от пользователя, проверяет права доступа и отвечает на сообщение.
+
+    :param message: Сообщение от пользователя.
+    :type message: types.Message
+    :param state: Состояние конечного автомата.
+    :type state: FSMContext
+    :return: None
+    """
     chat_id = message.chat.id
     user_id = message.from_user.id
     is_admin = await db.check_admin(chat_id)
@@ -57,6 +66,15 @@ async def rcon_cmd(message: types.Message, state: FSMContext) -> None:
 
 
 async def cancel_state_rcon(message: types.Message, state: FSMContext) -> None:
+    """
+    Обрабатывает отмену состояния RCON и возвращает в главное меню.
+
+    :param message: Сообщение от пользователя.
+    :type message: types.Message
+    :param state: Состояние конечного автомата.
+    :type state: FSMContext
+    :return
+    """
     chat_id = message.chat.id
     main_menu = await get_main_menu(chat_id)
     is_admin = await db.check_admin(chat_id)
@@ -68,6 +86,15 @@ async def cancel_state_rcon(message: types.Message, state: FSMContext) -> None:
 
 
 async def get_command(message: types.Message, state: FSMContext) -> None:
+    """
+    Обрабатывает команду RCON от пользователя и отправляет результат выполнения команды.
+
+    :param message: Сообщение от пользователя.
+    :type message: types.Message
+    :param state: Состояние конечного автомата.
+    :type state: FSMContext
+    :return: None
+    """
     chat_id = message.chat.id
     user_id = message.from_user.id
     low = message.text.lower()
@@ -105,6 +132,11 @@ async def get_command(message: types.Message, state: FSMContext) -> None:
 
 
 async def register_routers() -> None:
+    """
+    Регистрация routers для обработки сообщений client.
+
+    :return: None
+    """
     client_router.message.register(rcon_cmd, TextInFilter(valid_commands["rcon"]))
     client_router.message.register(
         cancel_state_rcon,

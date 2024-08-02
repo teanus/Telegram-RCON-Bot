@@ -25,6 +25,13 @@ common_router = Router()
 
 
 async def start(message: Message) -> None:
+    """
+    Обрабатывает команду /start. Отправляет пользователю начальное сообщение с меню и информацией о доступе.
+
+    :param message: Сообщение от пользователя.
+    :type message: types.Message
+    :return: None
+    """
     chat_id = message.chat.id
     menu = await get_main_menu(chat_id)
     is_admin = await db.check_admin(chat_id)
@@ -36,4 +43,9 @@ async def start(message: Message) -> None:
 
 
 async def register_routers() -> None:
+    """
+    Регистрация routers для обработки сообщений common.
+
+    :return: None
+    """
     common_router.message.register(start)
