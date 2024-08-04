@@ -104,6 +104,11 @@ Telegram RCON bot для игры Minecraft Bedrock и Java edition
 [![Вконтакте](https://img.shields.io/badge/вконтакте-%232E87FB.svg?&style=for-the-badge&logo=vk&logoColor=white
 )](https://vk.com/dimawinchester)
 
+## Поддержать 💎
+<a href="https://boosty.to/teanus">
+  <img src="https://github.com/user-attachments/assets/5e9fd3a1-c4bd-4913-a861-85012c0d0f4a" alt="Boosty" width="100">
+</a>
+
 
 ## Лицензия
 
